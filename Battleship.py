@@ -2,14 +2,40 @@ import random
 
 if __name__ == "__main__":
     print("--Welcome to Battleship--")
-    board = {
-        1: [0, 0, 0, 0],
-        2: [0, 0, 0, 0],
-        3: [0, 0, 0, 0],
-        4: [0, 0, 0, 0]
-    }
-    columns = ["a", "b", "c", "d"]
-    shipRow = random.randint(1, 4)
+    while True:
+        boardSize = input("What size do you want the board to be(min of 4x4, max of 10x10): ")
+        if boardSize == "4x4" or boardSize == "5x5" or boardSize == "6x6" or boardSize == "7x7" or boardSize == "8x8" or boardSize == "9x9" or boardSize == "10x10":
+            break
+        else:
+            print("Please enter your board size in the proper format, i.e. 4x4, 5x5, 6x6 ...")
+      
+    if boardSize == "4x4":
+        board = {
+            1: [0, 0, 0, 0],
+            2: [0, 0, 0, 0],
+            3: [0, 0, 0, 0],
+            4: [0, 0, 0, 0]
+        }
+        columns = ["a", "b", "c", "d"]
+        shipRow = random.randint(1, 4)
+    if boardSize == "5x5":
+        columns = ["a", "b", "c", "d", "e"]
+        shipRow = random.randint(1, 5)
+    if boardSize == "6x6":
+        columns = ["a", "b", "c", "d", "e", "f"]
+        shipRow = random.randint(1, 6)
+    if boardSize == "7x7":
+        columns = ["a", "b", "c", "d", "e", "f", "g"]
+        shipRow = random.randint(1, 7)
+    if boardSize == "8x8":
+        columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
+        shipRow = random.randint(1, 8)
+    if boardSize == "9x9":
+        columns = ["a", "b", "c", "d", "e", "f", "g", "h", "i"]
+        shipRow = random.randint(1, 9)
+    if boardSize == "10x10":
+        columns = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
+        shipRow = random.randint(1, 10)
     shipColumn = random.choice(columns)
     shipCoord = (shipRow, shipColumn)
     print(shipCoord)
@@ -58,6 +84,9 @@ if __name__ == "__main__":
             break
         else:
             print("You missed! Try Again")
+
+        else:
+            print("You missed try again.")
 
     
 
