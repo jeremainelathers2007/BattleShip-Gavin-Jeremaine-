@@ -3,103 +3,40 @@ import random
 if __name__ == "__main__":
     print("--Welcome to Battleship--")
     while True:
-        boardSize = input("What size do you want the board to be(min of 4x4, max of 10x10): ")
-        if boardSize == "4x4" or boardSize == "5x5" or boardSize == "6x6" or boardSize == "7x7" or boardSize == "8x8" or boardSize == "9x9" or boardSize == "10x10":
+        boardSize = int(input("What do you want the sidelength of board to be(min of 4, max of 10): "))
+        if boardSize == 4 or boardSize == 5 or boardSize == 6 or boardSize == 7 or boardSize == 8 or boardSize == 9 or boardSize == 10:
             break
         else:
-            print("Please enter your board size in the proper format, i.e. 4x4, 5x5, 6x6 ...")
-      
-    if boardSize == "4x4":
-        board = {
-            1: [0, 0, 0, 0],
-            2: [0, 0, 0, 0],
-            3: [0, 0, 0, 0],
-            4: [0, 0, 0, 0]
-        }
-        columns = ["a", "b", "c", "d"]
-        shipRow = random.randint(1, 4)
-    if boardSize == "5x5":
-        board2 = {
-        1: [0,0,0,0,0,] , 
-        2: [0,0,0,0,0,] ,
-        3: [0,0,0,0,0,] ,
-        4: [0,0,0,0,0,] ,
-        5: [0,0,0,0,0,] ,
-         }
-        columns = ["a", "b", "c", "d", "e"]
-        shipRow = random.randint(1, 5)
-    if boardSize == "6x6":
-        board3 ={
-        1: [0,0,0,0,0,0],
-        2: [0,0,0,0,0,0],
-        3: [0,0,0,0,0,0],
-        4: [0,0,0,0,0,0],
-        5: [0,0,0,0,0,0],
-        6: [0,0,0,0,0,0],
-        }
-        columns = ["a", "b", "c", "d", "e", "f"]
-        shipRow = random.randint(1, 6)
-    if boardSize == "7x7":
-        board4 ={
-        1:[0,0,0,0,0,0,0],
-        2: [0,0,0,0,0,0,0],
-        3: [0,0,0,0,0,0,0],
-        4: [0,0,0,0,0,0,0],
-        5: [0,0,0,0,0,0,0],
-        6: [0,0,0,0,0,0,0],
-        7: [0,0,0,0,0,0,0],
-    }
-        columns = ["a", "b", "c", "d", "e", "f", "g"]
-        shipRow = random.randint(1, 7)
-    if boardSize == "8x8":
-        board5 = {
-        1: [0,0,0,0,0,0,0,0],
-        2: [0,0,0,0,0,0,0,0],
-        3: [0,0,0,0,0,0,0,0],
-        4: [0,0,0,0,0,0,0,0],
-        5: [0,0,0,0,0,0,0,0],
-        6: [0,0,0,0,0,0,0,0],
-        7: [0,0,0,0,0,0,0,0],
-        8: [0,0,0,0,0,0,0,0],
-    }
-        columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
-        shipRow = random.randint(1, 8)
-    if boardSize == "9x9":
-        board6= {
-        1: [0,0,0,0,0,0,0,0,0],
-        2: [0,0,0,0,0,0,0,0,0],
-        3: [0,0,0,0,0,0,0,0,0],
-        4: [0,0,0,0,0,0,0,0,0],
-        5: [0,0,0,0,0,0,0,0,0],
-        6: [0,0,0,0,0,0,0,0,0],
-        7: [0,0,0,0,0,0,0,0,0],
-        8: [0,0,0,0,0,0,0,0,0],
-        9: [0,0,0,0,0,0,0,0,0],
-    }
-        columns = ["a", "b", "c", "d", "e", "f", "g", "h", "i"]
-        shipRow = random.randint(1, 9)
-    if boardSize == "10x10":
-         board7={
-        1: [0,0,0,0,0,0,0,0,0,0],
-        2: [0,0,0,0,0,0,0,0,0,0],
-        3: [0,0,0,0,0,0,0,0,0,0],
-        4: [0,0,0,0,0,0,0,0,0,0],
-        5: [0,0,0,0,0,0,0,0,0,0],
-        6: [0,0,0,0,0,0,0,0,0,0],
-        7: [0,0,0,0,0,0,0,0,0,0],
-        8: [0,0,0,0,0,0,0,0,0,0],
-        9: [0,0,0,0,0,0,0,0,0,0],
-        10: [0,0,0,0,0,0,0,0,0,0],
-    }
-    columns = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
-    shipRow = random.randint(1, 10)
+            print("Please enter a valid side length(as a single number)")
+    
+    rows = []
+    rowCounter=1
+    for a in range(boardSize):
+        rows.append(rowCounter)
+        rowCounter+=1
+
+    columns = []
+    for c in range(boardSize):
+        columns.append(0)
+
+    boardCounter = 1
+    board = {}
+    for b in range(boardSize):
+        board[boardCounter] = columns
+        boardCounter +=1
+
+    shipRow = random.randint(1, boardSize)
     shipColumn = random.choice(columns)
     shipCoord = (shipRow, shipColumn)
     print(shipCoord)
     playerGuesses = []
     attempts = 0
     
-    print(f"Starting Board: \n{board[1]} \n{board[2]} \n{board[3]} \n{board[4]}")
+    startingCounter = 1
+    print("Starting Board:")
+    for row in range(boardSize):
+        print(board[startingCounter])
+        startingCounter +=1
 
     while True:
         columnNum = 0
