@@ -31,6 +31,8 @@ if __name__ == "__main__":
     playerShipRow = random.randint(1, boardSize)
     playerShipColumn = random.choice(usableLetters)
     playerShipCoord = (playerShipRow, playerShipColumn)
+    columnNum = {"a":0, "b":1, "c":2, "d":3, "e":4, "f":5, "g":6, "h":7, "i":8, "j":9}
+    playerBoard[playerShipRow][columnNum[playerShipColumn]] += 5
     print(playerShipCoord)
 
     computerBoard = {}
@@ -93,7 +95,6 @@ if __name__ == "__main__":
     computerShipsSunk = 0
 
     while True:
-        columnNum = 0
         print(f"\nPlayer Attempt #{attempts}")
         while True:
             while True:
@@ -104,40 +105,22 @@ if __name__ == "__main__":
                 except:
                     print(f"Enter a number 1-{boardSize}")
             while True:
-                columnGuess = input(f"Please enter a column{usableLetters}").strip() .lower()
-                if columnGuess == "a":
-                    columnNum += 0
-                if columnGuess == "b":
-                    columnNum += 1
-                if columnGuess == "c":
-                    columnNum += 2
-                if columnGuess == "d":
-                    columnNum += 3
-                if columnGuess == "e":
-                    columnNum += 4
-                if columnGuess == "f":
-                    columnNum += 5
-                if columnGuess == "g":
-                    columnNum += 6
-                if columnGuess == "h":
-                    columnNum += 7
-                if columnGuess == "i":
-                    columnNum += 8
-                if columnGuess == "j":
-                    columnNum += 9
-                elif columnGuess in usableLetters:
+                columnletter = input(f"Please enter a column{usableLetters}").strip() .lower()
+                if columnletter in usableLetters:
+                    columnNum = {"a":0, "b":1, "c":2, "d":3, "e":4, "f":5, "g":6, "h":7, "i":8, "j":9}
+                    columnGuess = columnNum[columnletter]
                     break
                 else:
                     print(f"Please enter one of the following:{usableLetters}")
             if (rowGuess, columnGuess) not in playerGuesses:
                 playerGuesses.append((rowGuess, columnGuess))
-                computerBoard[rowGuess][columnNum] += 1
+                computerBoard[rowGuess][columnGuess] += 1
                 break
             else:
                 print("Coordinate already guessed, try again")
 
         if (rowGuess, columnGuess) == computerShipCoord:
-            computerBoard[rowGuess][columnNum] += 1
+            computerBoard[rowGuess][columnGuess] += 1
             print("Congrats you sunk a ship!")
             playerShipsSunk += 1
         else:
@@ -147,41 +130,34 @@ if __name__ == "__main__":
         print(f"Computer Attempt #{attempts}")
         while True:
             compRowGuess = random.randint(1, boardSize)
-            compColumnGuess = random.choice(usableLetters)
-            if compColumnGuess == "a":
-                columnNum += 0
-            if compColumnGuess == "b":
-                columnNum += 1
-            if compColumnGuess == "c":
-                columnNum += 2
-            if compColumnGuess == "d":
-                columnNum += 3
-            if compColumnGuess == "e":
-                columnNum += 4
-            if compColumnGuess == "f":
-                columnNum += 5
-            if compColumnGuess == "g":
-                columnNum += 6
-            if compColumnGuess == "h":
-                columnNum += 7
-            if compColumnGuess == "i":
-                columnNum += 8
-            if compColumnGuess == "j":
-                columnNum += 9
-            if (compRowGuess, compColumnGuess) not in computerGuesses:
-                computerGuesses.append(compRowGuess, compColumnGuess)
+            compColumnletter = random.choice(usableLetters)
+            computerShot = (compRowGuess, compColumnletter)
+            if computerShot not in computerGuesses:
+                print(f"The computer hit ({compRowGuess},{compColumnletter})")
+                computerGuesses.append(computerShot)
+                columnConverter = {"a":0, "b":1, "c":2, "d":3, "e":4, "f":5, "g":6, "h":7, "i":8, "j":9}
+                columnNum = columnConverter[compColumnletter]
                 playerBoard[compRowGuess][columnNum] +=1
+                break
+            
+        if computerShot == playerShipCoord:
+            print("The computer sunk your ship")
+            computerShipsSunk += 1
+        if computerShot != playerShipCoord:
+            print("The computer missed")
+            
 
-
-
-
-
-
-        updatedCounter = 1
-        print("Updated Board:")
+        updatedCompCounter = 1
+        updatedPlayerCounter = 1
+        print("\nUpdated Computer Board:")
         for row in range(boardSize):
-            print(computerBoard[updatedCounter])
-            updatedCounter +=1
+            print(computerBoard[updatedCompCounter])
+            updatedCompCounter +=1
+        
+        print("\nUpdated player Board:")
+        for row in range(boardSize):
+            print(playerBoard[updatedPlayerCounter])
+            updatedPlayerCounter += 1
 
         attempts += 1
             
@@ -190,11 +166,18 @@ if __name__ == "__main__":
             break
         if computerShipsSunk == (1):
             print("The computer Sunk all the ships.")
-        if attempts == 5:
-            print("You failed to sink all the ships.")
+            break
+        # if attempts == 5:
+        #     print("You failed to sink all the ships.")
 
-    finalCounter = 1
-    print("Final Board:")
+    finalPlayerCounter = 1
+    finalCompCounter = 1
+    print("\nFinal Player Board:")
     for row in range(boardSize):
-        print(board[finalCounter])
-        finalCounter += 1
+        print(playerBoard[finalPlayerCounter])
+        finalPlayerCounter += 1
+
+    print("\nFinal Computer Board:")
+    for row in range(boardSize):
+        print(computerBoard[finalCompCounter])
+        finalCompCounter += 1
