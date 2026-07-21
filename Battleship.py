@@ -20,69 +20,81 @@ if __name__ == "__main__":
     for e in range(boardSize):
         usableLetters.append(letters[e])
     
-    board = {}
+    playerBoard = {}
     boardCounter = 1
     for c in range(boardSize):
         columns = []
         for f in range(boardSize):
             columns.append(0)
-        board[boardCounter] = columns
+        playerBoard[boardCounter] = columns
         boardCounter +=1
-        
-    while True:
-        placementQ = input("Do you want to place your own ships or have them randomly placed? ")
-        if placementQ == "place" or placementQ == "random":
-            break
-        else:
-            print("Try saying 'place' to place your own ships or 'random' to have them placed for you. ")
-    
-    shipLocations = []
-    if placementQ == "random":
-        for d in range(boardSize//2):
-            while True:
-                shipRow = random.randint(1, boardSize)
-                shipColumn = random.choice(usableLetters)
-                shipCoord = (shipRow, shipColumn)
-                if shipCoord not in shipLocations:
-                    shipLocations.append(shipCoord)
-                    break
-        print(shipLocations)
+    playerShipRow = random.randint(1, boardSize)
+    playerShipColumn = random.choice(usableLetters)
+    playerShipCoord = (playerShipRow, playerShipColumn)
+    print(playerShipCoord)
 
-    if placementQ == "place":
-        for d in range(boardSize//2):
-            while True:
-                while True:
-                    shipRow = int(input(f"What row do you want the ship to be on (1-{boardSize}: )"))
-                    if 1<=shipRow<=boardSize:
-                        break
-                    else:
-                        print("Try a valid integer in the range")
-                while True:
-                    shipColumn = input(f"What column do you want to place your ship on {usableLetters}: ")
-                    if shipColumn in usableLetters:
-                        break
-                    else:
-                        print("Try a valid letter.")
-                shipCoord = (shipRow, shipColumn)
-                if shipCoord not in shipLocations:
-                    shipLocations.append(shipCoord)
-                    break
-        print(shipLocations)
+    computerBoard = {}
+    boardCounter = 1
+    for c in range(boardSize):
+        columns = []
+        for f in range(boardSize):
+            columns.append(0)
+        computerBoard[boardCounter] = columns
+        boardCounter +=1
+    computerShipRow = random.randint(1, boardSize)
+    computerShipColumn = random.choice(usableLetters)
+    computerShipCoord = (computerShipRow, computerShipColumn)
+    print(computerShipCoord)
+        
+    # while True:
+    #     placementQ = input("Do you want to place your own ships or have them randomly placed? ")
+    #     if placementQ == "place" or placementQ == "random":
+    #         break
+    #     else:
+    #         print("Try saying 'place' to place your own ships or 'random' to have them placed for you. ")
+    
+    # shipLocations = []
+    # if placementQ == "random":
+    #     for d in range(boardSize//2):
+    #         while True:
+    #             shipRow = random.randint(1, boardSize)
+    #             shipColumn = random.choice(usableLetters)
+    #             shipCoord = (shipRow, shipColumn)
+    #             if shipCoord not in shipLocations:
+    #                 shipLocations.append(shipCoord)
+    #                 break
+    #     print(shipLocations)
+
+    # if placementQ == "place":
+    #     for d in range(boardSize//2):
+    #         while True:
+    #             while True:
+    #                 shipRow = int(input(f"What row do you want the ship to be on (1-{boardSize}: )"))
+    #                 if 1<=shipRow<=boardSize:
+    #                     break
+    #                 else:
+    #                     print("Try a valid integer in the range")
+    #             while True:
+    #                 shipColumn = input(f"What column do you want to place your ship on {usableLetters}: ")
+    #                 if shipColumn in usableLetters:
+    #                     break
+    #                 else:
+    #                     print("Try a valid letter.")
+    #             shipCoord = (shipRow, shipColumn)
+    #             if shipCoord not in shipLocations:
+    #                 shipLocations.append(shipCoord)
+    #                 break
+    #     print(shipLocations)
     
     playerGuesses = []
-    attempts = 0
-    
-    startingCounter = 1
-    print("Starting Board:")
-    for row in range(boardSize):
-        print(board[startingCounter])
-        startingCounter +=1
+    computerGuesses = []
+    attempts = 1
+    playerShipsSunk = 0
+    computerShipsSunk = 0
 
-    shipsSunk = 0
-    while True and attempts <= 4:
+    while True:
         columnNum = 0
-        attempts += 1
-        print(f"\nAttempt #{attempts}")
+        print(f"\nPlayer Attempt #{attempts}")
         while True:
             while True:
                 try:
@@ -116,32 +128,70 @@ if __name__ == "__main__":
                 elif columnGuess in usableLetters:
                     break
                 else:
-                    print("Please enter one of the following: a, b, c, d")
+                    print(f"Please enter one of the following:{usableLetters}")
             if (rowGuess, columnGuess) not in playerGuesses:
                 playerGuesses.append((rowGuess, columnGuess))
-                board[rowGuess][columnNum] += 1
+                computerBoard[rowGuess][columnNum] += 1
                 break
             else:
                 print("Coordinate already guessed, try again")
 
-        if (rowGuess, columnGuess) in shipLocations:
-            board[rowGuess][columnNum] += 1
+        if (rowGuess, columnGuess) == computerShipCoord:
+            computerBoard[rowGuess][columnNum] += 1
             print("Congrats you sunk a ship!")
-            shipsSunk += 1
+            playerShipsSunk += 1
         else:
-            print("You missed! Try Again")
+            print("You missed!")
         
+        columnNum = 0
+        print(f"Computer Attempt #{attempts}")
+        while True:
+            compRowGuess = random.randint(1, boardSize)
+            compColumnGuess = random.choice(usableLetters)
+            if compColumnGuess == "a":
+                columnNum += 0
+            if compColumnGuess == "b":
+                columnNum += 1
+            if compColumnGuess == "c":
+                columnNum += 2
+            if compColumnGuess == "d":
+                columnNum += 3
+            if compColumnGuess == "e":
+                columnNum += 4
+            if compColumnGuess == "f":
+                columnNum += 5
+            if compColumnGuess == "g":
+                columnNum += 6
+            if compColumnGuess == "h":
+                columnNum += 7
+            if compColumnGuess == "i":
+                columnNum += 8
+            if compColumnGuess == "j":
+                columnNum += 9
+            if (compRowGuess, compColumnGuess) not in computerGuesses:
+                computerGuesses.append(compRowGuess, compColumnGuess)
+                playerBoard[compRowGuess][columnNum] +=1
+
+
+
+
+
+
         updatedCounter = 1
         print("Updated Board:")
         for row in range(boardSize):
-            print(board[updatedCounter])
+            print(computerBoard[updatedCounter])
             updatedCounter +=1
 
-        if shipsSunk == (boardSize//2):
+        attempts += 1
+            
+        if playerShipsSunk == (1):
             print("You sunk all the ships!")
             break
+        if computerShipsSunk == (1):
+            print("The computer Sunk all the ships.")
         if attempts == 5:
-            print("You failed to sink all the ships. :(")
+            print("You failed to sink all the ships.")
 
     finalCounter = 1
     print("Final Board:")
