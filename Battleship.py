@@ -19,15 +19,16 @@ if __name__ == "__main__":
     usableLetters = []
     for e in range(boardSize):
         usableLetters.append(letters[e])
-    columns = []
-    for c in range(boardSize):
-        columns.append(0)
-
-    boardCounter = 1
+    
     board = {}
-    for b in range(boardSize):
+    boardCounter = 1
+    for c in range(boardSize):
+        columns = []
+        for f in range(boardSize):
+            columns.append(0)
         board[boardCounter] = columns
         boardCounter +=1
+        
     while True:
         placementQ = input("Do you want to place your own ships or have them randomly placed? ")
         if placementQ == "place" or placementQ == "random":
@@ -77,7 +78,8 @@ if __name__ == "__main__":
         print(board[startingCounter])
         startingCounter +=1
 
-    while True and attempts <= 5:
+    shipsSunk = 0
+    while True and attempts <= 4:
         columnNum = 0
         attempts += 1
         print(f"\nAttempt #{attempts}")
@@ -118,23 +120,31 @@ if __name__ == "__main__":
             if (rowGuess, columnGuess) not in playerGuesses:
                 playerGuesses.append((rowGuess, columnGuess))
                 board[rowGuess][columnNum] += 1
-                updatedCounter = 1
-                print("Updated Board:")
-                for row in range(boardSize):
-                    print(board[updatedCounter])
-                    updatedCounter +=1
                 break
             else:
                 print("Coordinate already guessed, try again")
 
-        if (rowGuess, columnGuess) == shipCoord:
+        if (rowGuess, columnGuess) in shipLocations:
             board[rowGuess][columnNum] += 1
-            finalCounter = 1
-            print("Final Board:")
-            for row in range(boardSize):
-                print(board[finalCounter])
-                finalCounter += 1
-            print("Congrats you sunk the ship!")
-            break
+            print("Congrats you sunk a ship!")
+            shipsSunk += 1
         else:
             print("You missed! Try Again")
+        
+        updatedCounter = 1
+        print("Updated Board:")
+        for row in range(boardSize):
+            print(board[updatedCounter])
+            updatedCounter +=1
+
+        if shipsSunk == (boardSize//2):
+            print("You sunk all the ships!")
+            break
+        if attempts == 5:
+            print("You failed to sink all the ships. :(")
+
+    finalCounter = 1
+    print("Final Board:")
+    for row in range(boardSize):
+        print(board[finalCounter])
+        finalCounter += 1
