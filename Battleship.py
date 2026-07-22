@@ -256,8 +256,10 @@ if __name__ == "__main__":
         
             if computerDinghyHits == 1:
                 print("The computer sank one of dinghy ships!")
+                computerDinghyHits.append((rowGuess,columnletter))
             if computerDestroyerHits ==2:
                 print("The computer sunk a destroyer!")
+                computerDestroyerHits.append((rowGuess,columnletter))
             if playerShipsSunk == ShipNumber:
                 print("The computer sank all of your ships")
 
