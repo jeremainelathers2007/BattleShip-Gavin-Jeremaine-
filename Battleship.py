@@ -214,27 +214,26 @@ if __name__ == "__main__":
             while True:
                 columnletter = input(f"Please enter a column{usableLetters}").strip() .lower()
                 if columnletter in usableLetters:
-                    columnGuess = letterToNumber[columnletter]
+                    columnNumber = ord(columnletter) - ord('a')
                     break
                 if columnletter == "break":
                     sys.exit()
                 else:
                     print(f"Please enter one of the following:{usableLetters}")
-            if (rowGuess, columnGuess) not in playerGuesses:
-                playerGuesses.append((rowGuess, columnGuess))
-                computerBoard[rowGuess][columnGuess] += 1
+            if (rowGuess, columnNumber) not in playerGuesses:
+                playerGuesses.append((rowGuess, columnNumber))
+                computerBoard[rowGuess][columnNumber] += 1
                 break
             else:
                 print("Coordinate already guessed, try again")
 
-        if (rowGuess, columnGuess) == computerShipsSunk:
-            computerBoard[rowGuess][columnGuess] += 1
+        if (rowGuess, columnNumber) == computerShipsSunk:
+            computerBoard[rowGuess][columnNumber] += 1
             print("Congrats you sunk a ship!")
             playerShipsSunk += 1
         else:
             print("You missed!")
         
-        letterToNumber = 0
         print(f"Computer Attempt #{attempts}")
         while True:
             compRowGuess = random.randint(1, boardSize)
@@ -295,8 +294,6 @@ if __name__ == "__main__":
         if computerShipsSunk == (2):
             print("The computer Sunk all the ships.")
             break
-        # if attempts == 5:
-        #     print("You failed to sink all the ships.")
         
     finalPlayerCounter = 1
     finalCompCounter = 1
@@ -309,5 +306,3 @@ if __name__ == "__main__":
     for row in range(boardSize):
         print(computerBoard[finalCompCounter])
         finalCompCounter += 1
-
-    print("print")
