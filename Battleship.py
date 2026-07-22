@@ -190,8 +190,10 @@ if __name__ == "__main__":
     
     playerGuesses = []
     computerGuesses = []
-    allcomputerShots = []
-    allplayerShots = []
+    playerDinghyHits =[]
+    playerDestroyerHits = []
+    computerDinghyHits =[]
+    computerDestroyerHits =[]
     attempts = 1
     playerShipsSunk = 0
     computerShipsSunk = 0
@@ -220,7 +222,7 @@ if __name__ == "__main__":
             else:
                 print("Coordinate already guessed, try again")
 
-        if (rowGuess, columnGuess) == computerShipCoord:
+        if (rowGuess, columnGuess) == computerShipsSunk:
             computerBoard[rowGuess][columnGuess] += 1
             print("Congrats you sunk a ship!")
             playerShipsSunk += 1
@@ -247,21 +249,23 @@ if __name__ == "__main__":
         #     computerShipsSunk += 1
         # if computerShot != playerShipCoord:
         #     print("The computer missed")
-        for allcomputerShots in range(shipSize):
-            if computerGuesses == "dinghy":
+        
+            if computerDinghyHits == 1:
                 print("The computer sank one of dinghy ships!")
-            if computerGuesses == "Destroyer":
+            if computerDestroyerHits ==2:
                 print("The computer sunk a destroyer!")
-            if allcomputerShots == allShips:
+            if playerShipsSunk == ShipNumber:
                 print("The computer sank all of your ships")
 
         
-        for allplayerShots in range(shipSize):
-            if playerGuesses == "dingehy":
+        
+            if playerDinghyHits == 1:
                 print("You sunk one of the computer's dinghy's")
-            if playerGuesses == "Destroyer":
+                playerDinghyHits.append(rowGuess,columnletter)
+            if playerDestroyerHits == 2:
                 print("You sank one of the computer's Destroyer's")
-            if allplayerShots == allShips:
+                playerDestroyerHits.append(rowGuess,columnletter)
+            if computerShipsSunk == ShipNumber:
                 print("You sunk all of the computer's ships!")
         
         
@@ -271,7 +275,7 @@ if __name__ == "__main__":
         for row in range(boardSize):
             print(computerBoard[updatedCompCounter])
             updatedCompCounter +=1
-        ghghhg
+        
         print("\nUpdated player Board:")
         for row in range(boardSize):
             print(playerBoard[updatedPlayerCounter])
