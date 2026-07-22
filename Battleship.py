@@ -42,8 +42,8 @@ if __name__ == "__main__":
     lOrR = ["left", "right"]
 
     for ship in range(shipNumber):
-        while True:
-            if shipSize[ship] == 1:
+        if shipSize[ship] == 1:
+            while True:
                 playerShipRow = random.randint(1, boardSize)
                 playerShipColumn = random.choice(usableLetters)
                 single = (playerShipRow, playerShipColumn)
@@ -66,7 +66,7 @@ if __name__ == "__main__":
                     columnNumber = letterToNumber[bigShipColumn]
                     if columnNumber == 0:
                         directionH = "right"
-                    elif columnNumber == boardSize:
+                    elif columnNumber == boardSize - 1:
                         directionH = "left"
                     else:
                         directionH = random.choice(lOrR)
@@ -79,11 +79,81 @@ if __name__ == "__main__":
                         additionalCoord = (bigShipRow, additionalColumn)
                         if additionalCoord not in allPlayerCoords:
                             biggerShip.append(additionalCoord)
+                            allPlayerCoords.append(additionalCoord)
+                            allPlayerCoords.append(startCoord)
+                            if shipSize[1] == 2:
+                                playerShips["destroyer"] = biggerShip
+
+                if shipDirection == "vertical":
+                    if bigShipRow == 1:
+                        directionV = "down"
+                    elif bigShipRow == boardSize - 1:
+                        directionV = "up"
+                    else:
+                        directionV = random.choice(uOrD)
+                    for length in range(1):
+                        if directionV == "down":
+                            extension = bigShipRow + 1
+                        if directionV == "up":
+                            extension = bigShipRow - 1
+                        additionalCoord = (extension, bigShipColumn)
+                        if additionalCoord not in allPlayerCoords:
+                            biggerShip.append(additionalCoord)
+                            allPlayerCoords.append(additionalCoord)
+                            allPlayerCoords.append(startCoord)
+                            if shipSize[1] == 2:
+                                playerShips["destroyer"] = biggerShip
+                
+                if len(biggerShip) == 2:
+                    break
+
+    print(f"player ships {playerShips}")
+
+    for ship in range(shipNumber):
+        if shipSize[ship] == 1:
+            while True:
+                computerShipRow = random.randint(1, boardSize)
+                computerShipColumn = random.choice(usableLetters)
+                single = (computerShipRow, computerShipColumn)
+                if single not in allComputerCoords:
+                    computerShips["dinghy"] = single
+                    allComputerCoords.append(single)
+                    break
+
+        if shipSize[ship] > 1:
+            while True:
+                biggerShip = []
+                bigShipRow = random.randint(1, boardSize)
+                bigShipColumn = random.choice(usableLetters)
+                startCoord = (bigShipRow, bigShipColumn)
+                if startCoord not in allComputerCoords:
+                    biggerShip.append(startCoord)
+                shipDirection = random.choice(vOrH)
+            
+                if shipDirection == "horizontal":
+                    columnNumber = letterToNumber[bigShipColumn]
+                    if columnNumber == 0:
+                        directionH = "right"
+                    elif columnNumber == boardSize:
+                        directionH = "left"
+                    else:
+                        directionH = random.choice(lOrR)
+                    for length in range(1):
+                        if directionH == "right":
+                            extension = columnNumber + 1
+                        if directionH == "left":
+                            extension = columnNumber - 1
+                        additionalColumn = numberToLetter[extension]
+                        additionalCoord = (bigShipRow, additionalColumn)
+                        if additionalCoord not in allComputerCoords:
+                            biggerShip.append(additionalCoord)
+                            allComputerCoords.append(startCoord)
+                            allComputerCoords.append(additionalCoord)
                             if shipSize[1] == 2:
                                 computerShips["destroyer"] = biggerShip
-                    if playerShips["destroyer"] == biggerShip:
+                    if len(biggerShip) == 2:
                         break
-
+                
                 if shipDirection == "vertical":
                     if bigShipRow == 1:
                         directionV = "down"
@@ -92,84 +162,21 @@ if __name__ == "__main__":
                     else:
                         directionV = random.choice(uOrD)
                     for length in range(1):
-                        if directionV == "up":
-                            extension = bigShipRow + 1
                         if directionV == "down":
+                            extension = bigShipRow + 1
+                        if directionV == "up":
                             extension = bigShipRow - 1
                         additionalCoord = (extension, bigShipColumn)
-                        if additionalCoord not in allPlayerCoords:
+                        if additionalCoord not in allComputerCoords:
                             biggerShip.append(additionalCoord)
+                            allComputerCoords.append(startCoord)
+                            allComputerCoords.append(additionalCoord)
                             if shipSize[1] == 2:
                                 computerShips["destroyer"] = biggerShip
-                    if playerShips["destroyer"] == biggerShip:
+                    if len(biggerShip) == 2:
                         break
 
-    print(playerShips)
-
-    # for ship in range(shipNumber):
-    #     while True:
-    #         if shipSize[ship] == 1:
-    #             computerShipRow = random.randint(1, boardSize)
-    #             computerShipColumn = random.choice(usableLetters)
-    #             single = (computerShipRow, computerShipColumn)
-    #             if single not in allComputerCoords:
-    #                 computerShips["dinghy"] = single
-    #                 allComputerCoords.append(single)
-    #                 break
-
-    #     if shipSize[ship] > 1:
-    #         while True:
-    #             biggerShip = []
-    #             bigShipRow = random.randint(1, boardSize)
-    #             bigShipColumn = random.choice(usableLetters)
-    #             startCoord = (bigShipRow, bigShipColumn)
-    #             if startCoord not in allComputerCoords:
-    #                 biggerShip.append(startCoord)
-    #             shipDirection = random.choice(vOrH)
-            
-    #             if shipDirection == "horizontal":
-    #                 columnNumber = letterToNumber[bigShipColumn]
-    #                 if columnNumber == 0:
-    #                     directionH = "right"
-    #                 elif columnNumber == boardSize:
-    #                     directionH = "left"
-    #                 else:
-    #                     directionH = random.choice(lOrR)
-    #                 for length in range(1):
-    #                     if directionH == "right":
-    #                         extension = columnNumber + 1
-    #                     if directionH == "left":
-    #                         extension = columnNumber - 1
-    #                     additionalColumn = numberToLetter[extension]
-    #                     additionalCoord = (bigShipRow, additionalColumn)
-    #                     if additionalCoord not in allComputerCoords:
-    #                         biggerShip.append(additionalCoord)
-    #                         if shipSize[1] == 2:
-    #                             computerShips["destroyer"] = biggerShip
-    #                 if computerShips["destroyer"] == biggerShip:
-    #                     break
-                
-    #             if shipDirection == "vertical":
-    #                 if bigShipRow == 1:
-    #                     directionV = "down"
-    #                 elif bigShipRow == boardSize:
-    #                     directionV = "up"
-    #                 else:
-    #                     directionV = random.choice(uOrD)
-    #                 for length in range(1):
-    #                     if directionV == "up":
-    #                         extension = bigShipRow + 1
-    #                     if directionV == "down":
-    #                         extension = bigShipRow - 1
-    #                     additionalCoord = (extension, bigShipColumn)
-    #                     if additionalCoord not in allComputerCoords:
-    #                         biggerShip.append(additionalCoord)
-    #                         if shipSize[1] == 2:
-    #                             computerShips["destroyer"] = biggerShip
-    #                 if computerShips["destroyer"] == biggerShip:
-    #                     break
-
-    # print(computerShips)
+    print(f"computer ships {computerShips}")
 
     computerBoard = {}
     boardCounter = 1
