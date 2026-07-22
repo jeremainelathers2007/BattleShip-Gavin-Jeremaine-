@@ -271,7 +271,7 @@ if __name__ == "__main__":
         for row in range(boardSize):
             print(computerBoard[updatedCompCounter])
             updatedCompCounter +=1
-        
+        ghghhg
         print("\nUpdated player Board:")
         for row in range(boardSize):
             print(playerBoard[updatedPlayerCounter])
