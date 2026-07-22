@@ -1,7 +1,6 @@
 #Names: Gavin and Jeremaine
 
 import random
-import sys
 
 if __name__ == "__main__":
     print("--Welcome to Battleship--")
@@ -22,8 +21,6 @@ if __name__ == "__main__":
     for f in range(boardSize):
         usableLetters.append(chr(f + ord('a')))
     
-    ShipNumber = 2
-    ShipLength = ()
     playerBoard = {}
     boardCounter = 1
     for c in range(boardSize):
@@ -78,7 +75,7 @@ if __name__ == "__main__":
                             extension = columnNumber + 1
                         if directionH == "left":
                             extension = columnNumber - 1
-                        additionalColumn = chr(columnNumber + ord('a'))
+                        additionalColumn = chr(extension + ord('a'))
                         additionalCoord = (bigShipRow, additionalColumn)
                         if additionalCoord not in allPlayerCoords:
                             biggerShip.append(additionalCoord)
@@ -146,7 +143,7 @@ if __name__ == "__main__":
                             extension = columnNumber + 1
                         if directionH == "left":
                             extension = columnNumber - 1
-                        additionalColumn = chr(columnNumber + ord('a'))
+                        additionalColumn = chr(extension + ord('a'))
                         additionalCoord = (bigShipRow, additionalColumn)
                         if additionalCoord not in allComputerCoords:
                             biggerShip.append(additionalCoord)
@@ -189,7 +186,12 @@ if __name__ == "__main__":
             columns.append(0)
         computerBoard[boardCounter] = columns
         boardCounter +=1
-        
+
+    for g in range(len(allPlayerCoords)):
+        row = allPlayerCoords[g][0]
+        columnLetter = allPlayerCoords[g][1]
+        columnnumber = ord(columnLetter) - ord('a')
+        playerBoard[row][columnnumber] = 5
     
     playerGuesses = []
     computerGuesses = []
@@ -215,8 +217,6 @@ if __name__ == "__main__":
                 columnletter = input(f"Please enter a column{usableLetters}").strip() .lower()
                 if columnletter in usableLetters:
                     break
-                if columnletter == "break":
-                    sys.exit()
                 else:
                     print(f"Please enter one of the following:{usableLetters}")
                     
@@ -230,7 +230,7 @@ if __name__ == "__main__":
 
 
         if (rowGuess, columnletter) == computerShips["dinghy"]:
-            print("You hit the computer's dinghy!")
+            print("You hit one of the computers ships!")
             playerDinghyHits.append((rowGuess,columnletter))
 
             if len(playerDinghyHits) == 1:
@@ -238,7 +238,7 @@ if __name__ == "__main__":
                 computerShipsSunk += 1
 
         elif (rowGuess,columnletter) in computerShips["destroyer"]:
-            print("You hit the computer's Destroyer!")
+            print("You hit one of the computers ships!")
             playerDestroyerHits.append((rowGuess, columnletter))
 
             if len(playerDestroyerHits) == 2:
@@ -246,12 +246,6 @@ if __name__ == "__main__":
                 computerShipsSunk += 1
         else:
             print("You missed!")
-
-      
-
-
-
-        
         
         print(f"Computer Attempt #{attempts}")
         while True:
@@ -295,20 +289,17 @@ if __name__ == "__main__":
             # if computerDestroyerHits ==2:
             #     print("The computer sunk a destroyer!")
             #     computerDestroyerHits.append((rowGuess,columnletter))
-            if playerShipsSunk == ShipNumber:
+            if playerShipsSunk == shipNumber:
                 print("The computer sank all of your ships")
 
-        
-        
             # if playerDinghyHits == 1:
             #     print("You sunk one of the computer's dinghy's")
             #     playerDinghyHits.append(rowGuess,columnletter)
             # if playerDestroyerHits == 2:
             #     print("You sank one of the computer's Destroyer's")
             #     playerDestroyerHits.append(rowGuess,columnletter)
-            if computerShipsSunk == ShipNumber:
+            if computerShipsSunk == shipNumber:
                 print("You sunk all of the computer's ships!")
-        
         
         updatedCompCounter = 1
         updatedPlayerCounter = 1
@@ -332,8 +323,6 @@ if __name__ == "__main__":
             print("You sunk all of the computer's ships.")
             print("You won Battleship")
             break
-        # if attempts == 5:
-        #     print("You failed to sink all the ships.")
         
     finalPlayerCounter = 1
     finalCompCounter = 1
@@ -346,5 +335,3 @@ if __name__ == "__main__":
     for row in range(boardSize):
         print(computerBoard[finalCompCounter])
         finalCompCounter += 1
-
-    print("print")
