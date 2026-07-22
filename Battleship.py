@@ -14,12 +14,13 @@ if __name__ == "__main__":
     for a in range(boardSize):
         rows.append(rowCounter)
         rowCounter+=1
-
+    
     numberToLetter = {0:"a", 1:"b",2:"c", 3:"d", 4:"e", 5:"f", 6:"g", 7:"h", 8:"i", 9:"j"}
     usableLetters = []
     for e in range(boardSize):
         usableLetters.append(numberToLetter[e])
-    
+    ShipNumber = 2
+    ShipLength = ()
     playerBoard = {}
     boardCounter = 1
     for c in range(boardSize):
@@ -30,6 +31,7 @@ if __name__ == "__main__":
         boardCounter +=1
     playerShipRow = random.randint(1, boardSize)
     playerShipColumn = random.choice(usableLetters)
+    
     playerShipCoord = (playerShipRow, playerShipColumn)
     columnNum = {"a":0, "b":1, "c":2, "d":3, "e":4, "f":5, "g":6, "h":7, "i":8, "j":9}
     playerBoard[playerShipRow][columnNum[playerShipColumn]] += 5
@@ -54,7 +56,10 @@ if __name__ == "__main__":
     #         break
     #     else:
     #         print("Try saying 'place' to place your own ships or 'random' to have them placed for you. ")
-    
+
+        
+        
+
     # shipLocations = []
     # if placementQ == "random":
     #     for d in range(boardSize//2):
@@ -90,6 +95,8 @@ if __name__ == "__main__":
     
     playerGuesses = []
     computerGuesses = []
+    allcomputerShots = []
+    allplayerShots = []
     attempts = 1
     playerShipsSunk = 0
     computerShipsSunk = 0
@@ -132,6 +139,7 @@ if __name__ == "__main__":
             compRowGuess = random.randint(1, boardSize)
             compColumnletter = random.choice(usableLetters)
             computerShot = (compRowGuess, compColumnletter)
+            
             if computerShot not in computerGuesses:
                 print(f"The computer hit ({compRowGuess},{compColumnletter})")
                 computerGuesses.append(computerShot)
@@ -140,13 +148,29 @@ if __name__ == "__main__":
                 playerBoard[compRowGuess][columnNum] +=1
                 break
             
-        if computerShot == playerShipCoord:
-            print("The computer sunk your ship")
-            computerShipsSunk += 1
-        if computerShot != playerShipCoord:
-            print("The computer missed")
-            
+        # if computerShot == playerShipCoord:
+        #     print("The computer sunk your ship")
+        #     computerShipsSunk += 1
+        # if computerShot != playerShipCoord:
+        #     print("The computer missed")
+        for allcomputerShots in range(shipSize):
+            if computerGuesses == "dinghy":
+                print("The computer sank one of dinghy ships!")
+            if computerGuesses == "Destroyer":
+                print("The computer sunk a destroyer!")
+            if allcomputerShots == allShips:
+                print("The computer sank all of your ships")
 
+        
+        for allplayerShots in range(shipSize):
+            if playerGuesses == "dingehy":
+                print("You sunk one of the computer's dinghy's")
+            if playerGuesses == "Destroyer":
+                print("You sank one of the computer's Destroyer's")
+            if allplayerShots == allShips:
+                print("You sunk all of the computer's ships!")
+        
+        
         updatedCompCounter = 1
         updatedPlayerCounter = 1
         print("\nUpdated Computer Board:")
@@ -161,15 +185,15 @@ if __name__ == "__main__":
 
         attempts += 1
             
-        if playerShipsSunk == (1):
+        if playerShipsSunk == (2):
             print("You sunk all the ships!")
             break
-        if computerShipsSunk == (1):
+        if computerShipsSunk == (2):
             print("The computer Sunk all the ships.")
             break
         # if attempts == 5:
         #     print("You failed to sink all the ships.")
-
+        
     finalPlayerCounter = 1
     finalCompCounter = 1
     print("\nFinal Player Board:")
