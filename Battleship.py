@@ -1,8 +1,9 @@
+#Names: Gavin and Jeremaine
+
 import random
+import sys
 
 if __name__ == "__main__":
-    letterToNumber = {"a":0, "b":1, "c":2, "d":3, "e":4, "f":5, "g":6, "h":7, "i":8, "j":9}
-    numberToLetter = {0:"a", 1:"b",2:"c", 3:"d", 4:"e", 5:"f", 6:"g", 7:"h", 8:"i", 9:"j"}
     print("--Welcome to Battleship--")
     while True:
         boardSize = int(input("What do you want the sidelength of board to be(min of 4, max of 10): "))
@@ -16,9 +17,11 @@ if __name__ == "__main__":
     for a in range(boardSize):
         rows.append(rowCounter)
         rowCounter+=1
+    
     usableLetters = []
-    for e in range(boardSize):
-        usableLetters.append(numberToLetter[e])
+    for f in range(boardSize):
+        usableLetters.append(chr(f + ord('a')))
+    
     ShipNumber = 2
     ShipLength = ()
     playerBoard = {}
@@ -63,7 +66,7 @@ if __name__ == "__main__":
                 shipDirection = random.choice(vOrH)
             
                 if shipDirection == "horizontal":
-                    columnNumber = letterToNumber[bigShipColumn]
+                    columnNumber = ord(bigShipColumn) - ord('a')
                     if columnNumber == 0:
                         directionH = "right"
                     elif columnNumber == boardSize - 1:
@@ -75,7 +78,7 @@ if __name__ == "__main__":
                             extension = columnNumber + 1
                         if directionH == "left":
                             extension = columnNumber - 1
-                        additionalColumn = numberToLetter[extension]
+                        additionalColumn = chr(columnNumber + ord('a'))
                         additionalCoord = (bigShipRow, additionalColumn)
                         if additionalCoord not in allPlayerCoords:
                             biggerShip.append(additionalCoord)
@@ -131,7 +134,7 @@ if __name__ == "__main__":
                 shipDirection = random.choice(vOrH)
             
                 if shipDirection == "horizontal":
-                    columnNumber = letterToNumber[bigShipColumn]
+                    columnNumber = ord(bigShipColumn) - ord('a')
                     if columnNumber == 0:
                         directionH = "right"
                     elif columnNumber == boardSize:
@@ -143,7 +146,7 @@ if __name__ == "__main__":
                             extension = columnNumber + 1
                         if directionH == "left":
                             extension = columnNumber - 1
-                        additionalColumn = numberToLetter[extension]
+                        additionalColumn = chr(columnNumber + ord('a'))
                         additionalCoord = (bigShipRow, additionalColumn)
                         if additionalCoord not in allComputerCoords:
                             biggerShip.append(additionalCoord)
@@ -213,6 +216,8 @@ if __name__ == "__main__":
                 if columnletter in usableLetters:
                     columnGuess = letterToNumber[columnletter]
                     break
+                if columnletter == "break":
+                    sys.exit()
                 else:
                     print(f"Please enter one of the following:{usableLetters}")
             if (rowGuess, columnGuess) not in playerGuesses:
@@ -239,9 +244,8 @@ if __name__ == "__main__":
             if computerShot not in computerGuesses:
                 print(f"The computer hit ({compRowGuess},{compColumnletter})")
                 computerGuesses.append(computerShot)
-                columnConverter = {"a":0, "b":1, "c":2, "d":3, "e":4, "f":5, "g":6, "h":7, "i":8, "j":9}
-                letterToNumber = columnConverter[compColumnletter]
-                playerBoard[compRowGuess][letterToNumber] +=1
+                columnNumber = ord(compColumnletter) - ord('a')
+                playerBoard[compRowGuess][columnNumber] +=1
                 break
             
         # if computerShot == playerShipCoord:
@@ -303,3 +307,5 @@ if __name__ == "__main__":
     for row in range(boardSize):
         print(computerBoard[finalCompCounter])
         finalCompCounter += 1
+
+    print("print")
