@@ -1,7 +1,6 @@
 #Names: Gavin and Jeremaine
 
 import random
-import sys
 
 if __name__ == "__main__":
     print("--Welcome to Battleship--")
@@ -22,8 +21,6 @@ if __name__ == "__main__":
     for f in range(boardSize):
         usableLetters.append(chr(f + ord('a')))
     
-    ShipNumber = 2
-    ShipLength = ()
     playerBoard = {}
     boardCounter = 1
     for c in range(boardSize):
@@ -78,7 +75,7 @@ if __name__ == "__main__":
                             extension = columnNumber + 1
                         if directionH == "left":
                             extension = columnNumber - 1
-                        additionalColumn = chr(columnNumber + ord('a'))
+                        additionalColumn = chr(extension + ord('a'))
                         additionalCoord = (bigShipRow, additionalColumn)
                         if additionalCoord not in allPlayerCoords:
                             biggerShip.append(additionalCoord)
@@ -146,7 +143,7 @@ if __name__ == "__main__":
                             extension = columnNumber + 1
                         if directionH == "left":
                             extension = columnNumber - 1
-                        additionalColumn = chr(columnNumber + ord('a'))
+                        additionalColumn = chr(extension + ord('a'))
                         additionalCoord = (bigShipRow, additionalColumn)
                         if additionalCoord not in allComputerCoords:
                             biggerShip.append(additionalCoord)
@@ -189,7 +186,12 @@ if __name__ == "__main__":
             columns.append(0)
         computerBoard[boardCounter] = columns
         boardCounter +=1
-        
+
+    for g in range(len(allPlayerCoords)):
+        row = allPlayerCoords[g][0]
+        columnLetter = allPlayerCoords[g][1]
+        columnnumber = ord(columnLetter) - ord('a')
+        playerBoard[row][columnnumber] = 5
     
     playerGuesses = []
     computerGuesses = []
@@ -216,8 +218,6 @@ if __name__ == "__main__":
                 if columnletter in usableLetters:
                     columnNumber = ord(columnletter) - ord('a')
                     break
-                if columnletter == "break":
-                    sys.exit()
                 else:
                     print(f"Please enter one of the following:{usableLetters}")
             if (rowGuess, columnNumber) not in playerGuesses:
@@ -241,7 +241,7 @@ if __name__ == "__main__":
             computerShot = (compRowGuess, compColumnletter)
             
             if computerShot not in computerGuesses:
-                print(f"The computer hit ({compRowGuess},{compColumnletter})")
+                print(f"The computer shot at ({compRowGuess},{compColumnletter})")
                 computerGuesses.append(computerShot)
                 columnNumber = ord(compColumnletter) - ord('a')
                 playerBoard[compRowGuess][columnNumber] +=1
