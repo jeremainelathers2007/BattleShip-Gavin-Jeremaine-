@@ -124,7 +124,12 @@ def validateInput(row, column,boardSize, guesses):
     elif (row, columnletter) in guesses:
         return False
     return True
-    
+def winChecker(shipsSunk, shipNumber):
+    if shipsSunk == shipNumber:
+        return True
+    return False
+
+
 if __name__ == "__main__":
     print("--Welcome to Battleship--")
     while True:
@@ -208,14 +213,13 @@ if __name__ == "__main__":
                 checkHit(playerShips, playerBoard, playerShipsSunk, "user", computerDestroyerHits, computerDinghyHits, "computer", computerShot)
                 break
             
-        if playerShipsSunk == shipNumber:
+        if winChecker(playerShipsSunk, shipNumber):
             print("The computer sank all of your ships")
             break
-
-        if computerShipsSunk == shipNumber:
-            print("You sunk all of the computer's ships!")
+        if winChecker(computerShipsSunk, shipNumber):
+            print("You sank all of the computers ships")        
             break
-        
+
         updatedCompCounter = 1
         updatedPlayerCounter = 1
         print("\nUpdated Computer Board:")
