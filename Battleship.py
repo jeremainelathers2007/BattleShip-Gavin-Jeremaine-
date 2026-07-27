@@ -19,7 +19,6 @@ def createBoard(size, userBoard):
         boardCounter +=1
 
 def shipPlacement(shipCount, shipSize, userShips, allUserCoords):
-
     vOrH = ["horizontal", "vertical"]
     uOrD = ["up", "down"]
     lOrR = ["left", "right"]
@@ -42,53 +41,54 @@ def shipPlacement(shipCount, shipSize, userShips, allUserCoords):
                 bigShipColumn = random.choice(usableLetters)
                 startCoord = (bigShipRow, bigShipColumn)
                 if startCoord not in allUserCoords:
-                    biggerShip.append(startCoord)
-                shipDirection = random.choice(vOrH)
-            
-                if shipDirection == "horizontal":
-                    columnNumber = ord(bigShipColumn) - ord('a')
-                    if columnNumber == 0:
-                        directionH = "right"
-                    elif columnNumber == boardSize - 1:
-                        directionH = "left"
-                    else:
-                        directionH = random.choice(lOrR)
-                    for length in range(1):
-                        if directionH == "right":
-                            extension = columnNumber + 1
-                        if directionH == "left":
-                            extension = columnNumber - 1
-                        additionalColumn = chr(extension + ord('a'))
-                        additionalCoord = (bigShipRow, additionalColumn)
-                        if additionalCoord not in allUserCoords:
-                            biggerShip.append(additionalCoord)
-                            allUserCoords.append(additionalCoord)
-                            allUserCoords.append(startCoord)
-                            if shipSize[1] == 2:
-                                userShips["destroyer"] = biggerShip
+                    shipDirection = random.choice(vOrH)
+                    if shipDirection == "horizontal":
+                        columnNumber = ord(bigShipColumn) - ord('a')
+                        if columnNumber == 0:
+                            directionH = "right"
+                        elif columnNumber == boardSize - 1:
+                            directionH = "left"
+                        else:
+                            directionH = random.choice(lOrR)
+                        for length in range(1):
+                            if directionH == "right":
+                                extension = columnNumber + 1
+                            if directionH == "left":
+                                extension = columnNumber - 1
+                            additionalColumn = chr(extension + ord('a'))
+                            additionalCoord = (bigShipRow, additionalColumn)
+                            if additionalCoord not in allUserCoords:
+                                biggerShip.append(additionalCoord)
+                                biggerShip.append(startCoord)
+                                allUserCoords.append(additionalCoord)
+                                allUserCoords.append(startCoord)
+                                if shipSize[1] == 2:
+                                    userShips["destroyer"] = biggerShip
 
-                if shipDirection == "vertical":
-                    if bigShipRow == 1:
-                        directionV = "down"
-                    elif bigShipRow == boardSize:
-                        directionV = "up"
-                    else:
-                        directionV = random.choice(uOrD)
-                    for length in range(1):
-                        if directionV == "down":
-                            extension = bigShipRow + 1
-                        if directionV == "up":
-                            extension = bigShipRow - 1
-                        additionalCoord = (extension, bigShipColumn)
-                        if additionalCoord not in allUserCoords:
-                            biggerShip.append(additionalCoord)
-                            allUserCoords.append(additionalCoord)
-                            allUserCoords.append(startCoord)
-                            if shipSize[1] == 2:
-                                userShips["destroyer"] = biggerShip
-                
-                if len(biggerShip) == 2:
-                    break
+                    if shipDirection == "vertical":
+                        if bigShipRow == 1:
+                            directionV = "down"
+                        elif bigShipRow == boardSize:
+                            directionV = "up"
+                        else:
+                            directionV = random.choice(uOrD)
+                        for length in range(1):
+                            if directionV == "down":
+                                extension = bigShipRow + 1
+                            if directionV == "up":
+                                extension = bigShipRow - 1
+                            additionalCoord = (extension, bigShipColumn)
+                            if additionalCoord not in allUserCoords:
+                                biggerShip.append(additionalCoord)
+                                biggerShip.append(startCoord)
+                                allUserCoords.append(additionalCoord)
+                                allUserCoords.append(startCoord)
+                                if shipSize[1] == 2:
+                                    userShips["destroyer"] = biggerShip
+                    
+                    if len(biggerShip) == 2:
+                        break
+
 def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlayer, currentPlayerDestroyerHits, currentPlayerDinghyHits, currentPlayer, currentPlayerGuess, rowGuess, columnletter):
     columnNumber = ord(columnletter) - ord('a')
     if currentPlayerGuess == otherPlayerShips["dinghy"]:
@@ -120,7 +120,7 @@ def validateInput(row, column, boardSize, guesses):
         return False
     elif columnNumber < 0 or columnNumber >= boardSize:
         return False
-    elif (row, columnletter) in guesses:
+    elif (row, column) in guesses:
         return False
     return True
 
@@ -194,6 +194,10 @@ if __name__ == "__main__":
 
         playerGuess = (rowGuess, columnletter)
         computerShipsSunk = checkHit(computerShips, computerBoard, computerShipsSunk, "computer", playerDestroyerHits, playerDinghyHits, "user", playerGuess, rowGuess, columnletter)
+        if winChecker(computerShipsSunk, shipNumber) == True:
+            print("You sank all of the computers ships")        
+            break
+
         print(f"Computer Attempt #{attempts}")
         while True:
             compRowGuess = random.randint(1, boardSize)
@@ -212,10 +216,6 @@ if __name__ == "__main__":
         
         if winChecker(playerShipsSunk, shipNumber) == True:
             print("The computer sank all of your ships")
-            break
-
-        if winChecker(computerShipsSunk, shipNumber) == True:
-            print("You sank all of the computers ships")        
             break
 
         updatedCompCounter = 1
