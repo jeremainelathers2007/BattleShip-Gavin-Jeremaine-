@@ -89,7 +89,31 @@ def shipPlacement(shipCount, shipSize, userShips, allUserCoords):
                 
                 if len(biggerShip) == 2:
                     break
-    
+def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlayer, currentPlayerDestroyerHits, currentPlayerDinghyHits, currentPlayer):
+        columnNumber = ord(columnletter) - ord('a')
+        if (rowGuess, columnletter) == otherPlayerShips["dinghy"]:
+            print(f"{currentPlayer} hit one of {otherPlayer}s ships!")
+            currentPlayerDinghyHits.append((rowGuess,columnletter))
+
+            if len(currentPlayerDinghyHits) == 1:
+                print(f"{currentPlayer} sunk {otherPlayer}'s dinghy")
+                otherPlayerBoard[rowGuess][columnNumber] += 2
+                otherPlayerShipsSunk += 1
+
+        elif (rowGuess,columnletter) in otherPlayerShips["destroyer"]:
+            print(f"{currentPlayer} hit one of {otherPlayer}s ships!")
+            otherPlayerBoard[rowGuess][columnNumber] += 1
+            currentPlayerDestroyerHits.append((rowGuess, columnletter))
+
+            if len(currentPlayerDestroyerHits) == 2:
+                print(f"{currentPlayer} sunk {otherPlayer}'s destroyer")
+                otherPlayerShipsSunk += 1
+                for row, column in currentPlayerDestroyerHits:
+                    sunkColumn = ord(column) - ord('a')
+                    otherPlayerBoard[row][sunkColumn] += 1
+
+        else:
+            print(f"{currentPlayer} missed!")
 
 if __name__ == "__main__":
     print("--Welcome to Battleship--")
@@ -159,30 +183,7 @@ if __name__ == "__main__":
             else:
                 print("Coordinate already guessed, try again")
 
-        columnNumber = ord(columnletter) - ord('a')
-        if (rowGuess, columnletter) == computerShips["dinghy"]:
-            print("You hit one of the computers ships!")
-            playerDinghyHits.append((rowGuess,columnletter))
-
-            if len(playerDinghyHits) == 1:
-                print("You sunk the computer's dinghy")
-                computerBoard[rowGuess][columnNumber] += 2
-                computerShipsSunk += 1
-
-        elif (rowGuess,columnletter) in computerShips["destroyer"]:
-            print("You hit one of the computers ships!")
-            computerBoard[rowGuess][columnNumber] += 1
-            playerDestroyerHits.append((rowGuess, columnletter))
-
-            if len(playerDestroyerHits) == 2:
-                print("You sunk the computer's destroyer")
-                computerShipsSunk += 1
-                for row, column in playerDestroyerHits:
-                    sunkColumn = ord(column) - ord('a')
-                    computerBoard[row][sunkColumn] += 1
-
-        else:
-            print("You missed!")
+        checkHit(computerShips, computerBoard, computerShipsSunk, "computer", playerDestroyerHits, playerDinghyHits, "user")
         
         print(f"Computer Attempt #{attempts}")
         while True:
@@ -191,52 +192,21 @@ if __name__ == "__main__":
             computerShot = (compRowGuess, compColumnletter)
             
             if computerShot not in computerGuesses:
-                print(f"The computer hit ({compRowGuess},{compColumnletter})")
+                print(f"The computer shot at ({compRowGuess},{compColumnletter})")
                 computerGuesses.append(computerShot)
                 columnNumber = ord(compColumnletter) - ord('a')
                 playerBoard[compRowGuess][columnNumber] +=1
 
-                if computerShot == playerShips["dinghy"]:
-                    print("The computer hit your dinghy")
-                    computerDinghyHits.append(computerShot)
-
-                    if len(computerDinghyHits) == 1:
-                        print("The computer sunk your dinghy!")
-                        playerShipsSunk += 1
-
-                elif computerShot in playerShips["destroyer"]:
-                    print("The computer hit your destroyer ")
-                    computerDestroyerHits.append(computerShot)
-
-                    if len(computerDestroyerHits) ==2:
-                        playerShipsSunk += 1
-                else:
-                    print("The computer missed")
+                checkHit(playerShips, playerBoard, playerShipsSunk, "user", computerDestroyerHits, computerDinghyHits, "computer")
                 break
             
-        # if computerShot == playerShipCoord:
-        #     print("The computer sunk your ship")
-        #     computerShipsSunk += 1
-        # if computerShot != playerShipCoord:
-        #     print("The computer missed")
-        
-            # if computerDinghyHits == 1:
-            #     print("The computer sank one of dinghy ships!")
-            #     computerDinghyHits.append((rowGuess,columnletter))
-            # if computerDestroyerHits ==2:
-            #     print("The computer sunk a destroyer!")
-            #     computerDestroyerHits.append((rowGuess,columnletter))
-            if playerShipsSunk == shipNumber:
-                print("The computer sank all of your ships")
+        if playerShipsSunk == shipNumber:
+            print("The computer sank all of your ships")
+            break
 
-            # if playerDinghyHits == 1:
-            #     print("You sunk one of the computer's dinghy's")
-            #     playerDinghyHits.append(rowGuess,columnletter)
-            # if playerDestroyerHits == 2:
-            #     print("You sank one of the computer's Destroyer's")
-            #     playerDestroyerHits.append(rowGuess,columnletter)
-            if computerShipsSunk == shipNumber:
-                print("You sunk all of the computer's ships!")
+        if computerShipsSunk == shipNumber:
+            print("You sunk all of the computer's ships!")
+            break
         
         updatedCompCounter = 1
         updatedPlayerCounter = 1
