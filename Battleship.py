@@ -5,11 +5,14 @@ import random
 if __name__ == "__main__":
     print("--Welcome to Battleship--")
     while True:
-        boardSize = int(input("What do you want the sidelength of board to be(min of 4, max of 10): "))
-        if 4<= boardSize <= 10:
-            break
-        else:
-            print("Please enter a valid side length(as a single number)")
+        try:
+            boardSize = int(input("What do you want the sidelength of board to be(min of 4, max of 10): "))
+            if 4<= boardSize <= 10:
+                break
+            else:
+                print("Please enter a valid side length(as a single number)")
+        except:
+            print("Please enter a number")
     
     rows = []
     rowCounter=1
@@ -228,22 +231,27 @@ if __name__ == "__main__":
             else:
                 print("Coordinate already guessed, try again")
 
-
+        columnNumber = ord(columnletter) - ord('a')
         if (rowGuess, columnletter) == computerShips["dinghy"]:
             print("You hit one of the computers ships!")
             playerDinghyHits.append((rowGuess,columnletter))
 
             if len(playerDinghyHits) == 1:
                 print("You sunk the computer's dinghy")
+                computerBoard[rowGuess][columnNumber] += 2
                 computerShipsSunk += 1
 
         elif (rowGuess,columnletter) in computerShips["destroyer"]:
             print("You hit one of the computers ships!")
+            computerBoard[rowGuess][columnNumber] += 1
             playerDestroyerHits.append((rowGuess, columnletter))
 
             if len(playerDestroyerHits) == 2:
                 print("You sunk the computer's destroyer")
                 computerShipsSunk += 1
+                for row, col in playerDestroyerHits:
+                    computerBoard[row][col] += 1
+
         else:
             print("You missed!")
         
