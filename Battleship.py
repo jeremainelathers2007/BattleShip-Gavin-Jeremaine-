@@ -114,7 +114,17 @@ def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlay
 
         else:
             print(f"{currentPlayer} missed!")
+def validateInput(row, column,boardSize, guesses):
 
+    columnNumber = ord(columnletter) - ord('a')
+    if row < 1 or row > boardSize:
+        return False
+    elif columnNumber < 0 or columnNumber >= boardSize:
+        return False
+    elif (row, columnletter) in guesses:
+        return False
+    return True
+    
 if __name__ == "__main__":
     print("--Welcome to Battleship--")
     while True:
@@ -160,28 +170,24 @@ if __name__ == "__main__":
 
     while True:
         print(f"\nPlayer Attempt #{attempts}")
+    
         while True:
-            while True:
                 try:
                     rowGuess = int(input(f"Please enter a row(1-{boardSize}): "))
-                    if 1<=rowGuess<=boardSize:
+                    columnletter = (input(f"please enter a column (1-{boardSize}): ")).strip().lower()
+                    if validateInput(rowGuess,columnletter,boardSize,playerGuesses):
+                        columnNumber = ord(columnletter)- ord('a')
+
+                        playerGuesses.append((rowGuess,columnletter))
+                        computerBoard[rowGuess][columnNumber] += 1
+
                         break
+                    else:
+                        print("Invalid coordinate or already guessed, try again")
                 except:
-                    print(f"Enter a number 1-{boardSize}")
-            while True:
-                columnletter = input(f"Please enter a column{usableLetters}").strip() .lower()
-                if columnletter in usableLetters:
-                    break
-                else:
-                    print(f"Please enter one of the following:{usableLetters}")
-                    
-            columnNumber = ord(columnletter) - ord('a')
-            if (rowGuess, columnletter) not in playerGuesses:
-                playerGuesses.append((rowGuess, columnletter))
-                computerBoard[rowGuess][columnNumber] += 1
-                break
-            else:
-                print("Coordinate already guessed, try again")
+                    print("Please enter a valid coordinate")
+
+
 
         checkHit(computerShips, computerBoard, computerShipsSunk, "computer", playerDestroyerHits, playerDinghyHits, "user")
         
