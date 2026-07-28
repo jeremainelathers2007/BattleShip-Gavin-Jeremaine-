@@ -19,10 +19,6 @@ def createBoard(size, userBoard):
         boardCounter +=1
 
 def shipPlacement(shipCount, shipSize, userShips, allUserCoords, boardSize):
-    vOrH = ["horizontal", "vertical"]
-    uOrD = ["up", "down"]
-    lOrR = ["left", "right"]
-
     for ship in range(shipCount):
         if shipSize[ship] == 1:
             while True:
@@ -41,19 +37,19 @@ def shipPlacement(shipCount, shipSize, userShips, allUserCoords, boardSize):
                 bigShipColumn = random.choice(usableLetters)
                 startCoord = (bigShipRow, bigShipColumn)
                 if startCoord not in allUserCoords:
-                    shipDirection = random.choice(vOrH)
-                    if shipDirection == "horizontal":
+                    shipDirection = random.randint(1,2)
+                    if shipDirection == 1:
                         columnNumber = ord(bigShipColumn) - ord('a')
                         if columnNumber == 0:
-                            directionH = "right"
+                            directionH = 1
                         elif columnNumber == boardSize - 1:
-                            directionH = "left"
+                            directionH = 2
                         else:
-                            directionH = random.choice(lOrR)
+                            directionH = random.randint(1,2)
                         for length in range(1):
-                            if directionH == "right":
+                            if directionH == 1:
                                 extension = columnNumber + 1
-                            if directionH == "left":
+                            if directionH == 2:
                                 extension = columnNumber - 1
                             additionalColumn = chr(extension + ord('a'))
                             additionalCoord = (bigShipRow, additionalColumn)
@@ -65,17 +61,17 @@ def shipPlacement(shipCount, shipSize, userShips, allUserCoords, boardSize):
                                 if shipSize[1] == 2:
                                     userShips["destroyer"] = biggerShip
 
-                    if shipDirection == "vertical":
+                    if shipDirection == 2:
                         if bigShipRow == 1:
-                            directionV = "down"
+                            directionV = 1
                         elif bigShipRow == boardSize:
-                            directionV = "up"
+                            directionV = 2
                         else:
-                            directionV = random.choice(uOrD)
+                            directionV = random.randint(1,2)
                         for length in range(1):
-                            if directionV == "down":
+                            if directionV == 1:
                                 extension = bigShipRow + 1
-                            if directionV == "up":
+                            if directionV == 2:
                                 extension = bigShipRow - 1
                             additionalCoord = (extension, bigShipColumn)
                             if additionalCoord not in allUserCoords:
@@ -95,12 +91,12 @@ def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlay
     if currentPlayerGuess == otherPlayerShips["dinghy"]:
         print(f"{currentPlayer} hit one of {otherPlayer}s ships!")
         print(f"{currentPlayer} sunk {otherPlayer}'s dinghy")
-        otherPlayerBoard[rowGuess][columnNumber] += 2
+        otherPlayerBoard[rowGuess][columnNumber] == 3
         otherPlayerShipsSunk += 1
 
     elif currentPlayerGuess in otherPlayerShips["destroyer"]:
         print(f"{currentPlayer} hit one of {otherPlayer}s ships!")
-        otherPlayerBoard[rowGuess][columnNumber] += 1
+        otherPlayerBoard[rowGuess][columnNumber] == 2
         currentPlayerDestroyerHits += 1
 
         if currentPlayerDestroyerHits == 2:
@@ -184,7 +180,6 @@ if __name__ == "__main__":
                 if validateInput(rowGuess,columnletter,boardSize, computerBoard):
                     columnNumber = ord(columnletter)- ord('a')
                     computerBoard[rowGuess][columnNumber] += 1
-
                     break
                 else:
                     print("Invalid coordinate or already guessed, try again")
