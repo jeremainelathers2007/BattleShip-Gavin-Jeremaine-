@@ -18,7 +18,7 @@ def createBoard(size, userBoard):
         userBoard[boardCounter] = columns
         boardCounter +=1
 
-def shipPlacement(shipCount, shipSize, userShips, allUserCoords):
+def shipPlacement(shipCount, shipSize, userShips, allUserCoords, boardSize):
     vOrH = ["horizontal", "vertical"]
     uOrD = ["up", "down"]
     lOrR = ["left", "right"]
@@ -89,30 +89,31 @@ def shipPlacement(shipCount, shipSize, userShips, allUserCoords):
                     if len(biggerShip) == 2:
                         break
 
-def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlayer, currentPlayerDestroyerHits, currentPlayerDinghyHits, currentPlayer, currentPlayerGuess, rowGuess, columnletter):
+def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlayer, currentPlayerDestroyerHits, currentPlayer, currentPlayerGuess, rowGuess, columnletter):
     columnNumber = ord(columnletter) - ord('a')
+
     if currentPlayerGuess == otherPlayerShips["dinghy"]:
         print(f"{currentPlayer} hit one of {otherPlayer}s ships!")
-        currentPlayerDinghyHits.append((rowGuess,columnletter))
-
-        if len(currentPlayerDinghyHits) == 1:
-            print(f"{currentPlayer} sunk {otherPlayer}'s dinghy")
-            otherPlayerBoard[rowGuess][columnNumber] += 1
-            otherPlayerShipsSunk += 1
+        print(f"{currentPlayer} sunk {otherPlayer}'s dinghy")
+        otherPlayerBoard[rowGuess][columnNumber] += 2
+        otherPlayerShipsSunk += 1
 
     elif currentPlayerGuess in otherPlayerShips["destroyer"]:
         print(f"{currentPlayer} hit one of {otherPlayer}s ships!")
         otherPlayerBoard[rowGuess][columnNumber] += 1
-        currentPlayerDestroyerHits.append((rowGuess, columnletter))
+        currentPlayerDestroyerHits += 1
 
-        if len(currentPlayerDestroyerHits) == 2:
+        if currentPlayerDestroyerHits == 2:
             print(f"{currentPlayer} sunk {otherPlayer}'s destroyer")
             otherPlayerShipsSunk += 1
+            for row, column in otherPlayerShips["destroyer"]:
+                columnNumber = ord(column)-ord('a')
+                otherPlayerBoard[row][columnNumber] = 3
 
     else:
         print(f"{currentPlayer} missed!")
 
-    return otherPlayerShipsSunk
+    return otherPlayerShipsSunk, currentPlayerDestroyerHits
 
 def validateInput(row, column, boardSize, guesses):
     columnNumber = ord(column) - ord('a')
@@ -153,7 +154,7 @@ if __name__ == "__main__":
 
     playerBoard = {}
     createBoard(boardSize, playerBoard)
-    shipPlacement(shipNumber, shipSize, playerShips, allPlayerCoords)
+    shipPlacement(shipNumber, shipSize, playerShips, allPlayerCoords, boardSize)
     for row, column in allPlayerCoords:
         columnNumber = ord(column) - ord('a')
         playerBoard[row][columnNumber] += 5
@@ -161,18 +162,17 @@ if __name__ == "__main__":
 
     computerBoard = {}
     createBoard(boardSize, computerBoard)
-    shipPlacement(shipNumber, shipSize, computerShips, allComputerCoords)
+    shipPlacement(shipNumber, shipSize, computerShips, allComputerCoords, boardSize)
     print(f"computer ships {computerShips}")
 
     playerGuesses = []
     computerGuesses = []
-    playerDinghyHits =[]
-    playerDestroyerHits = []
-    computerDinghyHits =[]
-    computerDestroyerHits =[]
+    playerDestroyerHits = 0
+    computerDestroyerHits = 0
     attempts = 1
     playerShipsSunk = 0
     computerShipsSunk = 0
+    maxLetter = chr((boardSize-1) + ord('a'))
 
     while True:
         print(f"\nPlayer Attempt #{attempts}")
@@ -180,7 +180,7 @@ if __name__ == "__main__":
         while True:
             try:
                 rowGuess = int(input(f"Please enter a row(1-{boardSize}): "))
-                columnletter = (input(f"please enter a column {usableLetters}: ")).strip().lower()
+                columnletter = (input(f"please enter a column (a - {maxLetter}): ")).strip().lower()
                 if validateInput(rowGuess,columnletter,boardSize,playerGuesses):
                     columnNumber = ord(columnletter)- ord('a')
                     playerGuesses.append((rowGuess,columnletter))
@@ -193,9 +193,10 @@ if __name__ == "__main__":
                 print("Please enter a valid coordinate")
 
         playerGuess = (rowGuess, columnletter)
-        computerShipsSunk = checkHit(computerShips, computerBoard, computerShipsSunk, "computer", playerDestroyerHits, playerDinghyHits, "user", playerGuess, rowGuess, columnletter)
+        computerShipsSunk, playerDestroyerHits = checkHit(computerShips, computerBoard, computerShipsSunk, "computer", playerDestroyerHits, "user", playerGuess, rowGuess, columnletter)
         if winChecker(computerShipsSunk, shipNumber) == True:
-            print("You sank all of the computers ships")        
+            print("You sank all of the computers ships") 
+            print("You Win!")       
             break
 
         print(f"Computer Attempt #{attempts}")
@@ -212,10 +213,11 @@ if __name__ == "__main__":
             else:
                 continue
 
-        playerShipsSunk = checkHit(playerShips, playerBoard, playerShipsSunk, "user", computerDestroyerHits, computerDinghyHits, "computer", computerShot, compRowGuess, compColumnletter)
+        playerShipsSunk, computerDestroyerHits = checkHit(playerShips, playerBoard, playerShipsSunk, "user", computerDestroyerHits, "computer", computerShot, compRowGuess, compColumnletter)
         
         if winChecker(playerShipsSunk, shipNumber) == True:
             print("The computer sank all of your ships")
+            print("You lose")
             break
 
         updatedCompCounter = 1
