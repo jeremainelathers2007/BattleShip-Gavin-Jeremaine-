@@ -115,13 +115,15 @@ def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlay
 
     return otherPlayerShipsSunk, currentPlayerDestroyerHits
 
-def validateInput(row, column, boardSize, guesses):
+def validateInput(row, column, boardSize, currentPlayerBoard):
     columnNumber = ord(column) - ord('a')
-    if row < 1 or row > boardSize:
+
+    if row < 0 or row > boardSize:
         return False
     elif columnNumber < 0 or columnNumber >= boardSize:
         return False
-    elif (row, column) in guesses:
+    cell = currentPlayerBoard[row][columnNumber]
+    if cell != 0 and cell != 5:
         return False
     return True
 
@@ -181,7 +183,7 @@ if __name__ == "__main__":
             try:
                 rowGuess = int(input(f"Please enter a row(1-{boardSize}): "))
                 columnletter = (input(f"please enter a column (a - {maxLetter}): ")).strip().lower()
-                if validateInput(rowGuess,columnletter,boardSize,playerGuesses):
+                if validateInput(rowGuess,columnletter,boardSize, computerBoard):
                     columnNumber = ord(columnletter)- ord('a')
                     playerGuesses.append((rowGuess,columnletter))
                     computerBoard[rowGuess][columnNumber] += 1
@@ -204,7 +206,7 @@ if __name__ == "__main__":
             compRowGuess = random.randint(1, boardSize)
             compColumnletter = random.choice(usableLetters)
             computerShot = (compRowGuess, compColumnletter)
-            if validateInput(compRowGuess,compColumnletter,boardSize,computerGuesses):
+            if validateInput(compRowGuess,compColumnletter,boardSize, playerBoard):
                 compColumnNumber = ord(compColumnletter)- ord('a')
                 computerGuesses.append(computerShot)
                 playerBoard[compRowGuess][compColumnNumber] += 1
