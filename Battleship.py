@@ -167,8 +167,6 @@ if __name__ == "__main__":
     shipPlacement(shipNumber, shipSize, computerShips, allComputerCoords, boardSize)
     print(f"computer ships {computerShips}")
 
-    playerGuesses = []
-    computerGuesses = []
     playerDestroyerHits = 0
     computerDestroyerHits = 0
     attempts = 1
@@ -185,7 +183,6 @@ if __name__ == "__main__":
                 columnletter = (input(f"please enter a column (a - {maxLetter}): ")).strip().lower()
                 if validateInput(rowGuess,columnletter,boardSize, computerBoard):
                     columnNumber = ord(columnletter)- ord('a')
-                    playerGuesses.append((rowGuess,columnletter))
                     computerBoard[rowGuess][columnNumber] += 1
 
                     break
@@ -208,7 +205,6 @@ if __name__ == "__main__":
             computerShot = (compRowGuess, compColumnletter)
             if validateInput(compRowGuess,compColumnletter,boardSize, playerBoard):
                 compColumnNumber = ord(compColumnletter)- ord('a')
-                computerGuesses.append(computerShot)
                 playerBoard[compRowGuess][compColumnNumber] += 1
                 print(f"The computer guessed {computerShot}")
                 break
