@@ -18,12 +18,12 @@ def createBoard(size, userBoard):
         userBoard[boardCounter] = columns
         boardCounter +=1
 
-def shipPlacement(shipCount, shipSize, userShips, allUserCoords, boardSize):
+def shipPlacement(shipCount, shipSize, userShips, allUserCoords, boardSize, maxLetter):
     for ship in range(shipCount):
         if shipSize[ship] == 1:
             while True:
                 userShipRow = random.randint(1, boardSize)
-                userShipColumn = random.choice(usableLetters)
+                userShipColumn = chr(random.randint(ord('a'), ord(maxLetter)))
                 single = (userShipRow, userShipColumn)
                 if single not in allUserCoords:
                     userShips["dinghy"] = single
@@ -34,7 +34,7 @@ def shipPlacement(shipCount, shipSize, userShips, allUserCoords, boardSize):
             while True:
                 biggerShip = []
                 bigShipRow = random.randint(1, boardSize)
-                bigShipColumn = random.choice(usableLetters)
+                bigShipColumn = chr(random.randint(ord('a'), ord(maxLetter)))
                 startCoord = (bigShipRow, bigShipColumn)
                 if startCoord not in allUserCoords:
                     shipDirection = random.randint(1,2)
@@ -81,7 +81,7 @@ def shipPlacement(shipCount, shipSize, userShips, allUserCoords, boardSize):
                                 allUserCoords.append(startCoord)
                                 if shipSize[1] == 2:
                                     userShips["destroyer"] = biggerShip
-                    
+
                     if len(biggerShip) == 2:
                         break
 
@@ -141,9 +141,7 @@ if __name__ == "__main__":
         except:
             print("Please enter a number")
 
-    usableLetters = []
-    for f in range(boardSize):
-        usableLetters.append(chr(f + ord('a')))
+    maxLetter = chr((boardSize-1) + ord('a'))
     rows = []
     rowCounter=1
     for a in range(boardSize):
@@ -152,7 +150,7 @@ if __name__ == "__main__":
 
     playerBoard = {}
     createBoard(boardSize, playerBoard)
-    shipPlacement(shipNumber, shipSize, playerShips, allPlayerCoords, boardSize)
+    shipPlacement(shipNumber, shipSize, playerShips, allPlayerCoords, boardSize, maxLetter)
     for row, column in allPlayerCoords:
         columnNumber = ord(column) - ord('a')
         playerBoard[row][columnNumber] += 5
@@ -160,7 +158,7 @@ if __name__ == "__main__":
 
     computerBoard = {}
     createBoard(boardSize, computerBoard)
-    shipPlacement(shipNumber, shipSize, computerShips, allComputerCoords, boardSize)
+    shipPlacement(shipNumber, shipSize, computerShips, allComputerCoords, boardSize, maxLetter)
     print(f"computer ships {computerShips}")
 
     playerDestroyerHits = 0
@@ -168,7 +166,6 @@ if __name__ == "__main__":
     attempts = 1
     playerShipsSunk = 0
     computerShipsSunk = 0
-    maxLetter = chr((boardSize-1) + ord('a'))
 
     while True:
         print(f"\nPlayer Attempt #{attempts}")
@@ -196,7 +193,7 @@ if __name__ == "__main__":
         print(f"Computer Attempt #{attempts}")
         while True:
             compRowGuess = random.randint(1, boardSize)
-            compColumnletter = random.choice(usableLetters)
+            compColumnletter = chr(random.randint(ord('a'), ord(maxLetter)))
             computerShot = (compRowGuess, compColumnletter)
             if validateInput(compRowGuess,compColumnletter,boardSize, playerBoard):
                 compColumnNumber = ord(compColumnletter)- ord('a')
