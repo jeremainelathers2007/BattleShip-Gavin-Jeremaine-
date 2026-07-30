@@ -2,11 +2,20 @@
 
 import random
 playerShips = {}
-allPlayerCoords = []
 shipNumber = 5
-shipSize = []
 computerShips = {}
-allComputerCoords = []
+
+playerShips["Carrier"] = []
+playerShips["Battleship"] = []
+playerShips["Cruiser"] = []
+playerShips["Submarine"] = []
+playerShips["Destroyer"] = []
+
+computerShips["Carrier"] = []
+computerShips["Battleship"] = []
+computerShips["Cruiser"] = []
+computerShips["Submarine"] = []
+computerShips["Destroyer"] = []
 
 
 def createBoard(size, userBoard):
@@ -19,74 +28,71 @@ def createBoard(size, userBoard):
         userBoard[boardCounter] = columns
         boardCounter +=1
 
-def shipPlacement( userShips, allUserCoord, maxLetter, ShipNumber):
-    while True:
-            
-            while True:
-                biggerShip = []
-                destroyerShipRow = random.randint(1, boardSize)
-                destroyerShipColumn = chr(random.randint(ord('a'), ord(maxLetter)))
-                startCoord = (destroyerShipRow, destroyerShipColumn)
-                if startCoord not in allUserCoords:
-                    shipDirection = random.randint(1,2)
-                    if shipDirection == 1:
-                        columnNumber = ord(destroyerShipColumn) - ord('a')
-                        if columnNumber == 0:
-                            directionH = 1
-                        elif columnNumber == boardSize - 1:
-                            directionH = 2
-                        else:
-                            directionH = random.randint(1,2)
-                        for length in range(1):
-                            if directionH == 1:
-                                extension = columnNumber + 1
-                            if directionH == 2:
-                                extension = columnNumber - 1
-                            additionalColumn = chr(extension + ord('a'))
-                            additionalCoord = (destroyerShipRow, additionalColumn)
-                            if additionalCoord not in allUserCoords:
-                                biggerShip.append(additionalCoord)
-                                biggerShip.append(startCoord)
-                                allUserCoords.append(additionalCoord)
-                                allUserCoords.append(startCoord)
-                                if shipSize[1] == 2:
-                                    userShips["destroyer"] = biggerShip
+def shipPlacement(userShips, boardSize, maxLetter):
+    while (len(userShips["Carrier"]) < 5 or len(userShips["Battleship"]) < 4 or len(userShips["Cruiser"]) < 3 or len(userShips["Submarine"]) < 3 or len(userShips["Destroyer"]) < 2):
+        if len(userShips["Destroyer"]) < 2:
+            currentShip = "Destroyer"
+            Length = 2
+        elif len(userShips["Submarine"]) < 3:
+            currentShip = "Submarine"
+            Length = 3
+        elif len(userShips["Cruiser"]) < 3:
+            currentShip = "Cruiser"
+            Length = 3
+        elif len(userShips["Battleship"]) < 4:
+            currentShip = "Battleship"
+            Length = 4
+        else:
+            currentShip = "Carrier"
+            Length = 5
 
-                    if shipDirection == 2:
-                        if destroyerShipRow == 1:
-                            directionV = 1
-                        elif destroyerShipRow == boardSize:
-                            directionV = 2
-                        else:
-                            directionV = random.randint(1,2)
-                        for length in range(1):
-                            if directionV == 1:
-                                extension = destroyerShipRow + 1
-                            if directionV == 2:
-                                extension = destroyerShipRow - 1
-                            additionalCoord = (extension, destroyerShipColumn)
-                            if additionalCoord not in allUserCoords:
-                                biggerShip.append(additionalCoord)
-                                biggerShip.append(startCoord)
-                                allUserCoords.append(additionalCoord)
-                                allUserCoords.append(startCoord)
-                                if shipSize[1] == 2:
-                                    userShips["destroyer"] = biggerShip
+        if len(userShips[currentShip]) == 0:
+            shipRow = random.randint(1,boardSize)
+            shipColumn = chr(random.randint(ord('a'), ord(maxLetter)))
+            startCoord = (shipRow, shipColumn)
 
-                    if len(biggerShip) == 2:
-                        break
+            if startCoord in userShips["Carrier"] or startCoord in userShips["Battleship"] or startCoord in userShips["Cruiser"] or startCoord in userShips["Submarine"] or startCoord in userShips["Destroyer"]:
+                overlap = True
+            else:
+                overlap = False
+
+            if overlap == False:
+                userShips[currentShip].append(startCoord)
+            shipDirection = random.randint(1, 2)
+
+        else:
+            shipRow, shipColumn = userShips[currentShip][-1]
+            columnNumber = ord(shipColumn) - ord('a')
+
+            if shipDirection == 1:
+                extension = columnNumber + 1
+                if extension < boardSize:
+                    additionalCoord = (shipRow, chr(extension + ord('a')))
+            else:
+                extension = shipRow + 1
+                if extension <= boardSize:
+                    additionalCoord = (extension, shipColumn)
+
+            if additionalCoord in userShips["Carrier"] or additionalCoord in userShips["Battleship"] or additionalCoord in userShips["Cruiser"] or additionalCoord in userShips["Submarine"] or additionalCoord in userShips["Destroyer"]:
+                overlap = True
+            else:
+                overlap = False
+
+            if overlap == True:
+                userShips[currentShip].clear()
+            else:
+                userShips[currentShip].append(additionalCoord)
 
 def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlayer, currentPlayer, currentPlayerGuess, rowGuess, columnletter, currentPlayerCarrierHits, currentPlayerSubmarineHits, currentPlayerCrusierHits, currentPlayerBattleshipHits):
     columnNumber = ord(columnletter) - ord('a')
 
-
-    if currentPlayerGuess in otherPlayerShips["carrier"]:
+    if currentPlayerGuess in otherPlayerShips["Carrier"]:
         print(f"{currentPlayer} hit one of the {otherPlayer}'s ships!")
         currentPlayerCarrierHits += 1 
         if currentPlayerCarrierHits == 5:
-            print(f"{currentPlayer} sunk one of the {otherPlayer}'s Carriers!")
+            print(f"{currentPlayer} sunk {otherPlayer}'s Carrier!")
             otherPlayerShipsSunk += 1
-            for row, column in otherPlayerShips["battleship"]:
+            for row, column in otherPlayerShips["Carrier"]:
                 columnNumber = ord(column)-ord('a')
                 otherPlayerBoard[row][columnNumber] = 3
 
@@ -94,41 +100,37 @@ def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlay
         print(f"{currentPlayer} hit one of the {otherPlayer}'s ships")
         currentPlayerBattleshipHits += 1
         if currentPlayerBattleshipHits == 4:
-            print(f"{currentPlayer} sunk one of the {otherPlayer}'s Battleships!")
+            print(f"{currentPlayer} sunk {otherPlayer}'s Battleship!")
             otherPlayerShipsSunk += 1
-            for row, column in otherPlayerShips["battleship"]:
+            for row, column in otherPlayerShips["Battleship"]:
                 columnNumber = ord(column)-ord('a')
                 otherPlayerBoard[row][columnNumber] = 3
 
-    elif currentPlayerGuess in otherPlayerShips ["cruiser"] and ["submarine"]:
-
-        if currentPlayerGuess in otherPlayerShips ["cruiser"]:
-            print(f"{currentPlayer} hit one of the {otherPlayer}'s ships!")
-            currentPlayerCrusierHits += 1
+    elif currentPlayerGuess in otherPlayerShips ["Cruiser"]:
+        print(f"{currentPlayer} hit one of the {otherPlayer}'s ships!")
+        currentPlayerCrusierHits += 1
         if currentPlayerCrusierHits == 3:
-            print(f"{currentPlayer} sunk one of the {otherPlayer}'s Cruisers! ")
+            print(f"{currentPlayer} sunk {otherPlayer}'s Cruiser! ")
             otherPlayerShipsSunk += 1
-            for row, column in otherPlayerShips["cruiser"]:
+            for row, column in otherPlayerShips["Cruiser"]:
                 columnNumber = ord(column)-ord('a')
                 otherPlayerBoard[row][columnNumber] = 3
 
 
-        elif currentPlayerGuess in otherPlayerShips["submarine"]:
-            print(f"{currentPlayer} hit one of the {otherPlayer}'s ships")
-            otherPlayerBoard[rowGuess][compColumnNumber] == 3
-            currentPlayerSubmarineHits += 1
-            if currentPlayerSubmarineHits == 3:
-                print(f"{currentPlayer} sunk one of the {otherPlayer}'s Submarines")
-                otherPlayerShipsSunk += 1
-                for row, column in otherPlayerShips["submarine"]:
-                    columnNumber = ord(column) - ord('a')
-                    otherPlayerBoard[row][columnNumber] == 3
+    elif currentPlayerGuess in otherPlayerShips["Submarine"]:
+        print(f"{currentPlayer} hit one of the {otherPlayer}'s ships")
+        currentPlayerSubmarineHits += 1
+        if currentPlayerSubmarineHits == 3:
+            print(f"{currentPlayer} sunk {otherPlayer}'s Submarine")
+            otherPlayerShipsSunk += 1
+            for row, column in otherPlayerShips["Submarine"]:
+                columnNumber = ord(column) - ord('a')
+                otherPlayerBoard[row][columnNumber] == 3
 
     elif currentPlayerGuess in otherPlayerShips["destroyer"]:
         print(f"{currentPlayer} hit one of {otherPlayer}s ships!")
         otherPlayerBoard[rowGuess][columnNumber] == 2
         currentPlayerDestroyerHits += 1
-
         if currentPlayerDestroyerHits == 2:
             print(f"{currentPlayer} sunk {otherPlayer}'s destroyer")
             otherPlayerShipsSunk += 1
@@ -158,6 +160,11 @@ def winChecker(shipsSunk, shipNumber):
         return True
     return False
 
+def boardPrint(board):
+    boardCounter = 1
+    for row in board:
+        print(board[boardCounter])
+        boardCounter +=1
 
 if __name__ == "__main__":
     print("--Welcome to Battleship--")
@@ -165,24 +172,25 @@ if __name__ == "__main__":
     boardSize = 10
            
     maxLetter = chr((boardSize-1) + ord('a'))
-    rows = []
-    rowCounter=1
-    for a in range(boardSize):
-        rows.append(rowCounter)
-        rowCounter+=1
 
     playerBoard = {}
     createBoard(boardSize, playerBoard)
-    shipPlacement(shipNumber, playerShips, allPlayerCoords, boardSize, maxLetter)
-    for row, column in allPlayerCoords:
-        columnNumber = ord(column) - ord('a')
-        playerBoard[row][columnNumber] += 5
+    shipPlacement(playerShips, boardSize, maxLetter)
+    for ship in playerShips.values():
+        for row, column in ship:
+            columnNumber = ord(column) - ord('a')
+            playerBoard[row][columnNumber] += 5
     print(f"player ships {playerShips}")
 
     computerBoard = {}
     createBoard(boardSize, computerBoard)
-    shipPlacement(shipNumber, shipSize, computerShips, allComputerCoords, boardSize, maxLetter)
+    shipPlacement(computerShips, boardSize, maxLetter)
     print(f"computer ships {computerShips}")
+
+    print("\nStarting Computer Board")
+    boardPrint(computerBoard)
+    print("\nStarting Player Board")
+    boardPrint(playerBoard)
 
     playerDestroyerHits = 0
     computerDestroyerHits = 0
@@ -233,28 +241,16 @@ if __name__ == "__main__":
             print("You lose")
             break
 
-        updatedCompCounter = 1
         print("\nUpdated Computer Board:")
-        for row in range(boardSize):
-            print(computerBoard[updatedCompCounter])
-            updatedCompCounter +=1
+        boardPrint(computerBoard)
 
-        updatedPlayerCounter = 1
         print("\nUpdated player Board:")
-        for row in range(boardSize):
-            print(playerBoard[updatedPlayerCounter])
-            updatedPlayerCounter += 1
+        boardPrint(playerBoard)
 
         attempts += 1
         
-    finalPlayerCounter = 1
-    finalCompCounter = 1
-    print("\nFinal Player Board:")
-    for row in range(boardSize):
-        print(playerBoard[finalPlayerCounter])
-        finalPlayerCounter += 1
-
     print("\nFinal Computer Board:")
-    for row in range(boardSize):
-        print(computerBoard[finalCompCounter])
-        finalCompCounter += 1
+    boardPrint(computerBoard)
+
+    print("\nFinal Player Board:")
+    boardPrint(playerBoard)
