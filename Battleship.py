@@ -3,10 +3,11 @@
 import random
 playerShips = {}
 allPlayerCoords = []
-shipNumber = 2
-shipSize = [1,2]
+shipNumber = 5
+shipSize = []
 computerShips = {}
 allComputerCoords = []
+
 
 def createBoard(size, userBoard):
     userBoard.clear()
@@ -18,28 +19,18 @@ def createBoard(size, userBoard):
         userBoard[boardCounter] = columns
         boardCounter +=1
 
-def shipPlacement(shipCount, shipSize, userShips, allUserCoords, boardSize, maxLetter):
-    for ship in range(shipCount):
-        if shipSize[ship] == 1:
-            while True:
-                userShipRow = random.randint(1, boardSize)
-                userShipColumn = chr(random.randint(ord('a'), ord(maxLetter)))
-                single = (userShipRow, userShipColumn)
-                if single not in allUserCoords:
-                    userShips["dinghy"] = single
-                    allUserCoords.append(single)
-                    break
-
-        if shipSize[ship] > 1:
+def shipPlacement( userShips, allUserCoord, maxLetter, ShipNumber):
+    while True:
+            
             while True:
                 biggerShip = []
-                bigShipRow = random.randint(1, boardSize)
-                bigShipColumn = chr(random.randint(ord('a'), ord(maxLetter)))
-                startCoord = (bigShipRow, bigShipColumn)
+                destroyerShipRow = random.randint(1, boardSize)
+                destroyerShipColumn = chr(random.randint(ord('a'), ord(maxLetter)))
+                startCoord = (destroyerShipRow, destroyerShipColumn)
                 if startCoord not in allUserCoords:
                     shipDirection = random.randint(1,2)
                     if shipDirection == 1:
-                        columnNumber = ord(bigShipColumn) - ord('a')
+                        columnNumber = ord(destroyerShipColumn) - ord('a')
                         if columnNumber == 0:
                             directionH = 1
                         elif columnNumber == boardSize - 1:
@@ -52,7 +43,7 @@ def shipPlacement(shipCount, shipSize, userShips, allUserCoords, boardSize, maxL
                             if directionH == 2:
                                 extension = columnNumber - 1
                             additionalColumn = chr(extension + ord('a'))
-                            additionalCoord = (bigShipRow, additionalColumn)
+                            additionalCoord = (destroyerShipRow, additionalColumn)
                             if additionalCoord not in allUserCoords:
                                 biggerShip.append(additionalCoord)
                                 biggerShip.append(startCoord)
@@ -62,18 +53,18 @@ def shipPlacement(shipCount, shipSize, userShips, allUserCoords, boardSize, maxL
                                     userShips["destroyer"] = biggerShip
 
                     if shipDirection == 2:
-                        if bigShipRow == 1:
+                        if destroyerShipRow == 1:
                             directionV = 1
-                        elif bigShipRow == boardSize:
+                        elif destroyerShipRow == boardSize:
                             directionV = 2
                         else:
                             directionV = random.randint(1,2)
                         for length in range(1):
                             if directionV == 1:
-                                extension = bigShipRow + 1
+                                extension = destroyerShipRow + 1
                             if directionV == 2:
-                                extension = bigShipRow - 1
-                            additionalCoord = (extension, bigShipColumn)
+                                extension = destroyerShipRow - 1
+                            additionalCoord = (extension, destroyerShipColumn)
                             if additionalCoord not in allUserCoords:
                                 biggerShip.append(additionalCoord)
                                 biggerShip.append(startCoord)
@@ -85,14 +76,53 @@ def shipPlacement(shipCount, shipSize, userShips, allUserCoords, boardSize, maxL
                     if len(biggerShip) == 2:
                         break
 
-def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlayer, currentPlayerDestroyerHits, currentPlayer, currentPlayerGuess, rowGuess, columnletter):
+def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlayer, currentPlayer, currentPlayerGuess, rowGuess, columnletter, currentPlayerCarrierHits, currentPlayerSubmarineHits, currentPlayerCrusierHits, currentPlayerBattleshipHits):
     columnNumber = ord(columnletter) - ord('a')
 
-    if currentPlayerGuess == otherPlayerShips["dinghy"]:
-        print(f"{currentPlayer} hit one of {otherPlayer}s ships!")
-        print(f"{currentPlayer} sunk {otherPlayer}'s dinghy")
-        otherPlayerBoard[rowGuess][columnNumber] == 3
-        otherPlayerShipsSunk += 1
+
+    if currentPlayerGuess in otherPlayerShips["carrier"]:
+        print(f"{currentPlayer} hit one of the {otherPlayer}'s ships!")
+        currentPlayerCarrierHits += 1 
+        if currentPlayerCarrierHits == 5:
+            print(f"{currentPlayer} sunk one of the {otherPlayer}'s Carriers!")
+            otherPlayerShipsSunk += 1
+            for row, column in otherPlayerShips["battleship"]:
+                columnNumber = ord(column)-ord('a')
+                otherPlayerBoard[row][columnNumber] = 3
+
+    elif currentPlayerGuess in otherPlayerShips["battleship"]:
+        print(f"{currentPlayer} hit one of the {otherPlayer}'s ships")
+        currentPlayerBattleshipHits += 1
+        if currentPlayerBattleshipHits == 4:
+            print(f"{currentPlayer} sunk one of the {otherPlayer}'s Battleships!")
+            otherPlayerShipsSunk += 1
+            for row, column in otherPlayerShips["battleship"]:
+                columnNumber = ord(column)-ord('a')
+                otherPlayerBoard[row][columnNumber] = 3
+
+    elif currentPlayerGuess in otherPlayerShips ["cruiser"] and ["submarine"]:
+
+        if currentPlayerGuess in otherPlayerShips ["cruiser"]:
+            print(f"{currentPlayer} hit one of the {otherPlayer}'s ships!")
+            currentPlayerCrusierHits += 1
+        if currentPlayerCrusierHits == 3:
+            print(f"{currentPlayer} sunk one of the {otherPlayer}'s Cruisers! ")
+            otherPlayerShipsSunk += 1
+            for row, column in otherPlayerShips["cruiser"]:
+                columnNumber = ord(column)-ord('a')
+                otherPlayerBoard[row][columnNumber] = 3
+
+
+        elif currentPlayerGuess in otherPlayerShips["submarine"]:
+            print(f"{currentPlayer} hit one of the {otherPlayer}'s ships")
+            otherPlayerBoard[rowGuess][compColumnNumber] == 3
+            currentPlayerSubmarineHits += 1
+            if currentPlayerSubmarineHits == 3:
+                print(f"{currentPlayer} sunk one of the {otherPlayer}'s Submarines")
+                otherPlayerShipsSunk += 1
+                for row, column in otherPlayerShips["submarine"]:
+                    columnNumber = ord(column) - ord('a')
+                    otherPlayerBoard[row][columnNumber] == 3
 
     elif currentPlayerGuess in otherPlayerShips["destroyer"]:
         print(f"{currentPlayer} hit one of {otherPlayer}s ships!")
@@ -131,16 +161,9 @@ def winChecker(shipsSunk, shipNumber):
 
 if __name__ == "__main__":
     print("--Welcome to Battleship--")
-    while True:
-        try:
-            boardSize = int(input("What do you want the sidelength of board to be(min of 4, max of 10): "))
-            if 4<= boardSize <= 10:
-                break
-            else:
-                print("Please enter a valid side length(as a single number)")
-        except:
-            print("Please enter a number")
 
+    boardSize = 10
+           
     maxLetter = chr((boardSize-1) + ord('a'))
     rows = []
     rowCounter=1
@@ -150,7 +173,7 @@ if __name__ == "__main__":
 
     playerBoard = {}
     createBoard(boardSize, playerBoard)
-    shipPlacement(shipNumber, shipSize, playerShips, allPlayerCoords, boardSize, maxLetter)
+    shipPlacement(shipNumber, playerShips, allPlayerCoords, boardSize, maxLetter)
     for row, column in allPlayerCoords:
         columnNumber = ord(column) - ord('a')
         playerBoard[row][columnNumber] += 5
