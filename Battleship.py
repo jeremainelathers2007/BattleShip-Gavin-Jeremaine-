@@ -194,6 +194,14 @@ if __name__ == "__main__":
 
     playerDestroyerHits = 0
     computerDestroyerHits = 0
+    playerSubmarineHits = 0
+    computerSubmarineHits = 0
+    playerCruiserHits = 0
+    computerCruiserHits = 0
+    playerBattleshipHits = 0
+    computerBattleshipHits = 0
+    playerCarrierHits = 0
+    computerCarrierHits = 0
     attempts = 1
     playerShipsSunk = 0
     computerShipsSunk = 0
