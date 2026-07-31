@@ -163,7 +163,7 @@ def winChecker(shipsSunk, shipNumber):
 def boardPrint(board):
     boardCounter = 1
     for row in board:
-        print(board[boardCounter])
+        print(*board[boardCounter])
         boardCounter +=1
 
 if __name__ == "__main__":
