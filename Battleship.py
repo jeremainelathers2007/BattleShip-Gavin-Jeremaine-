@@ -83,7 +83,7 @@ def shipPlacement(userShips, boardSize, maxLetter):
             else:
                 userShips[currentShip].append(additionalCoord)
 
-def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlayer, currentPlayer, currentPlayerGuess, rowGuess, columnletter, currentPlayerCarrierHits, currentPlayerSubmarineHits, currentPlayerCrusierHits, currentPlayerBattleshipHits):
+def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlayer, currentPlayer, currentPlayerGuess, rowGuess, columnletter, currentPlayerCarrierHits, currentPlayerSubmarineHits, currentPlayerCruiserHits, currentPlayerBattleshipHits, currentPlayerDestroyerHits):
     columnNumber = ord(columnletter) - ord('a')
 
     if currentPlayerGuess in otherPlayerShips["Carrier"]:
@@ -96,7 +96,7 @@ def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlay
                 columnNumber = ord(column)-ord('a')
                 otherPlayerBoard[row][columnNumber] = 3
 
-    elif currentPlayerGuess in otherPlayerShips["battleship"]:
+    elif currentPlayerGuess in otherPlayerShips["Battleship"]:
         print(f"{currentPlayer} hit one of the {otherPlayer}'s ships")
         currentPlayerBattleshipHits += 1
         if currentPlayerBattleshipHits == 4:
@@ -108,8 +108,8 @@ def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlay
 
     elif currentPlayerGuess in otherPlayerShips ["Cruiser"]:
         print(f"{currentPlayer} hit one of the {otherPlayer}'s ships!")
-        currentPlayerCrusierHits += 1
-        if currentPlayerCrusierHits == 3:
+        currentPlayerCruiserHits += 1
+        if currentPlayerCruiserHits == 3:
             print(f"{currentPlayer} sunk {otherPlayer}'s Cruiser! ")
             otherPlayerShipsSunk += 1
             for row, column in otherPlayerShips["Cruiser"]:
@@ -125,23 +125,23 @@ def checkHit(otherPlayerShips, otherPlayerBoard, otherPlayerShipsSunk, otherPlay
             otherPlayerShipsSunk += 1
             for row, column in otherPlayerShips["Submarine"]:
                 columnNumber = ord(column) - ord('a')
-                otherPlayerBoard[row][columnNumber] == 3
+                otherPlayerBoard[row][columnNumber] = 3
 
-    elif currentPlayerGuess in otherPlayerShips["destroyer"]:
+    elif currentPlayerGuess in otherPlayerShips["Destroyer"]:
         print(f"{currentPlayer} hit one of {otherPlayer}s ships!")
         otherPlayerBoard[rowGuess][columnNumber] == 2
         currentPlayerDestroyerHits += 1
         if currentPlayerDestroyerHits == 2:
             print(f"{currentPlayer} sunk {otherPlayer}'s destroyer")
             otherPlayerShipsSunk += 1
-            for row, column in otherPlayerShips["destroyer"]:
+            for row, column in otherPlayerShips["Destroyer"]:
                 columnNumber = ord(column)-ord('a')
                 otherPlayerBoard[row][columnNumber] = 3
 
     else:
         print(f"{currentPlayer} missed!")
 
-    return otherPlayerShipsSunk, currentPlayerDestroyerHits
+    return otherPlayerShipsSunk, currentPlayerCarrierHits, currentPlayerSubmarineHits, currentPlayerCruiserHits, currentPlayerBattleshipHits, currentPlayerDestroyerHits
 
 def validateInput(row, column, boardSize, currentPlayerBoard):
     columnNumber = ord(column) - ord('a')
@@ -223,7 +223,7 @@ if __name__ == "__main__":
                 print("Please enter a valid coordinate")
 
         playerGuess = (rowGuess, columnletter)
-        computerShipsSunk, playerDestroyerHits = checkHit(computerShips, computerBoard, computerShipsSunk, "computer", playerDestroyerHits, "user", playerGuess, rowGuess, columnletter)
+        computerShipsSunk, playerCarrierHits, playerSubmarineHits, playerCruiserHits, playerBattleshipHits, playerDestroyerHits  = checkHit(computerShips, computerBoard, computerShipsSunk, "computer", "user", playerGuess, rowGuess, columnletter, playerCarrierHits, playerSubmarineHits, playerCruiserHits, playerBattleshipHits, playerDestroyerHits)
         if winChecker(computerShipsSunk, shipNumber) == True:
             print("You sank all of the computers ships") 
             print("You Win!")       
@@ -242,7 +242,7 @@ if __name__ == "__main__":
             else:
                 continue
 
-        playerShipsSunk, computerDestroyerHits = checkHit(playerShips, playerBoard, playerShipsSunk, "user", computerDestroyerHits, "computer", computerShot, compRowGuess, compColumnletter)
+        playerShipsSunk, computerCarrierHits, computerSubmarineHits, computerCruiserHits, computerBattleshipHits, computerDestroyerHits = checkHit(playerShips, playerBoard, playerShipsSunk, "user", "computer", computerShot, compRowGuess, compColumnletter, computerCarrierHits, computerSubmarineHits, computerCruiserHits, computerBattleshipHits, computerDestroyerHits)
         
         if winChecker(playerShipsSunk, shipNumber) == True:
             print("The computer sank all of your ships")
